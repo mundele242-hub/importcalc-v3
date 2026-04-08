@@ -4,191 +4,489 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>ImportCalc V3</title>
+<title>ImportCalc V3 — Chine vers Monde</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:#070b12;color:#eef2ff;font-family:sans-serif;padding:16px;}
-h1{color:#ff3f3f;font-size:22px;margin-bottom:16px;}
-.card{background:#0e1520;border:1px solid #1c2b40;border-radius:12px;padding:16px;margin-bottom:12px;}
-h3{font-size:16px;margin-bottom:14px;}
-label{display:block;font-size:12px;color:#8fa5c0;margin-bottom:5px;}
-input,select{width:100%;background:#131d2e;border:1px solid #223350;border-radius:8px;padding:11px;color:#eef2ff;font-size:14px;margin-bottom:12px;-webkit-appearance:none;}
-.btn{display:block;width:100%;background:#ff3f3f;color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;text-align:center;}
-.btn-sec{background:#131d2e;border:1px solid #223350;color:#8fa5c0;margin-top:8px;}
-.step-row{display:flex;align-items:center;margin-bottom:18px;}
-.dot{width:30px;height:30px;border-radius:50%;border:2px solid #223350;display:flex;align-items:center;justify-content:center;font-size:12px;color:#6e849e;flex-shrink:0;}
-.dot.on{border-color:#ff3f3f;color:#ff3f3f;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'DM Sans',sans-serif;background:#070b12;color:#eef2ff;min-height:100vh;padding:16px 14px 80px;}
+h1{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#eef2ff;margin-bottom:4px;}
+h1 span{color:#ff3f3f;}
+.sub{color:#8fa5c0;font-size:13px;margin-bottom:16px;}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+.badge{font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid #223350;color:#8fa5c0;}
+.badge.green{border-color:rgba(0,223,160,.2);color:#00c48c;background:rgba(0,223,160,.04);}
+.badge.blue{border-color:rgba(74,154,255,.2);color:#78b8ff;background:rgba(74,154,255,.04);}
+.step-row{display:flex;align-items:center;margin-bottom:20px;}
+.dot{width:30px;height:30px;border-radius:50%;border:2px solid #223350;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#6e849e;flex-shrink:0;background:#0e1520;}
+.dot.on{border-color:#ff3f3f;color:#ff3f3f;box-shadow:0 0 0 3px rgba(255,63,63,.1);}
+.dot.done{border-color:#00dfa0;background:#00dfa0;color:#070b12;}
 .line{flex:1;height:2px;background:#223350;}
-.hidden{display:none;}
-.result-big{text-align:center;font-size:38px;font-weight:800;color:#eef2ff;padding:16px 0;}
-.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #1c2b40;font-size:13px;}
+.line.done{background:#00dfa0;}
+.card{background:#0e1520;border:1px solid #1c2b40;border-radius:14px;padding:18px;margin-bottom:12px;}
+.card h3{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:4px;}
+.card .desc{color:#8fa5c0;font-size:12px;margin-bottom:16px;}
+label{display:block;font-size:12px;color:#8fa5c0;font-weight:500;margin-bottom:5px;}
+input,select,textarea{width:100%;background:#131d2e;border:1px solid #223350;border-radius:9px;padding:12px;color:#eef2ff;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none;appearance:none;margin-bottom:13px;}
+input:focus,select:focus{border-color:rgba(255,63,63,.4);}
+input::placeholder{color:#6e849e;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:420px){.grid2{grid-template-columns:1fr;}}
+.btn{display:block;width:100%;background:linear-gradient(135deg,#ff6628,#ff3f3f);color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;text-align:center;}
+.btn:active{opacity:.85;}
+.btn-sec{background:#131d2e;border:1px solid #223350;color:#8fa5c0;margin-top:8px;}
+.btn-green{background:linear-gradient(135deg,#00c48c,#00dfa0);color:#070b12;}
+.err{color:#ff7060;font-size:12px;display:none;margin-bottom:8px;padding:8px 10px;background:rgba(255,63,63,.07);border-radius:7px;border:1px solid rgba(255,63,63,.2);}
+.hidden{display:none !important;}
+.section-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6e849e;margin-bottom:10px;}
+/* Mode tabs */
+.mode-tabs{display:flex;gap:8px;margin-bottom:14px;}
+.mode-tab{flex:1;padding:11px;border:2px solid #223350;border-radius:10px;background:#131d2e;font-size:13px;font-weight:600;cursor:pointer;text-align:center;color:#8fa5c0;font-family:'DM Sans',sans-serif;}
+.mode-tab.active{border-color:#ff3f3f;background:rgba(255,63,63,.08);color:#eef2ff;}
+/* Resultats */
+.result-hero{background:linear-gradient(135deg,#071224,#09180f);border:1px solid #1c2b40;border-radius:14px;padding:20px;text-align:center;margin-bottom:12px;}
+.result-lbl{font-size:11px;color:#8fa5c0;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;}
+.result-total{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;background:linear-gradient(135deg,#fff,#8fa5c0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.result-sub{font-size:12px;color:#6e849e;margin-top:4px;}
+.row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid #1c2b40;font-size:13px;gap:8px;}
 .row:last-child{border:none;}
-.row b{font-weight:700;}
-.row.total{font-size:15px;font-weight:800;}
-.row.total b{color:#ff3f3f;}
-.alert{padding:10px;border-radius:8px;font-size:13px;margin-bottom:8px;line-height:1.5;}
-.ai{background:rgba(74,154,255,.06);border:1px solid rgba(74,154,255,.15);color:#78b8ff;}
-.warn{background:rgba(245,160,32,.06);border:1px solid rgba(245,160,32,.15);color:#fbbf24;}
-.danger{background:rgba(255,63,63,.06);border:1px solid rgba(255,63,63,.15);color:#ff8070;}
-.ok{background:rgba(0,223,160,.06);border:1px solid rgba(0,223,160,.15);color:#00dfa0;}
-.spinner{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,63,63,.2);border-top-color:#ff3f3f;border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:8px;}
+.row .lft{color:#8fa5c0;flex:1;}
+.row .rgt{font-weight:700;text-align:right;flex-shrink:0;}
+.row .expl{font-size:11px;color:#6e849e;margin-top:2px;}
+.row.total .lft{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:#eef2ff;}
+.row.total .rgt{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#ff3f3f;}
+.alert{padding:10px 12px;border-radius:9px;font-size:12.5px;margin-bottom:8px;line-height:1.55;display:flex;gap:8px;}
+.alert .ico{flex-shrink:0;font-size:13px;}
+.a-info{background:rgba(74,154,255,.06);border:1px solid rgba(74,154,255,.15);color:#78b8ff;}
+.a-warn{background:rgba(245,160,32,.06);border:1px solid rgba(245,160,32,.15);color:#fbbf24;}
+.a-danger{background:rgba(255,63,63,.06);border:1px solid rgba(255,63,63,.15);color:#ff8070;}
+.a-ok{background:rgba(0,223,160,.06);border:1px solid rgba(0,223,160,.15);color:#00dfa0;}
+.norm-item{display:flex;gap:8px;padding:9px 10px;background:#131d2e;border-radius:8px;margin-bottom:6px;font-size:12px;}
+.ndot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.nd-req{background:#ff3f3f;}
+.nd-rec{background:#f5a020;}
+.nd-opt{background:#00dfa0;}
+.ntag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;margin-left:6px;}
+.ntag-req{background:rgba(255,63,63,.1);color:#ff3f3f;}
+.ntag-rec{background:rgba(245,160,32,.1);color:#fbbf24;}
+.inco-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #1c2b40;font-size:12px;}
+.inco-row:last-child{border:none;}
+.inco-who{font-size:10px;font-weight:700;padding:3px 7px;border-radius:5px;text-align:center;flex-shrink:0;width:70px;}
+.iw-four{background:rgba(0,223,160,.08);color:#00c48c;border:1px solid rgba(0,223,160,.15);}
+.iw-vous{background:rgba(255,63,63,.08);color:#ff8070;border:1px solid rgba(255,63,63,.15);}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.cmp-card{background:#131d2e;border:2px solid #223350;border-radius:10px;padding:12px;text-align:center;}
+.cmp-card.winner{border-color:#00dfa0;}
+.cmp-win{font-size:10px;font-weight:700;color:#00dfa0;margin-bottom:4px;}
+.cmp-title{font-size:14px;margin-bottom:4px;}
+.cmp-price{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;}
+.cmp-sub{font-size:11px;color:#6e849e;margin-top:4px;}
+.prec{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;margin-bottom:10px;}
+.prec-high{background:rgba(0,223,160,.1);color:#00dfa0;border:1px solid rgba(0,223,160,.2);}
+.prec-med{background:rgba(245,160,32,.1);color:#fbbf24;border:1px solid rgba(245,160,32,.2);}
+.prec-low{background:rgba(110,132,158,.1);color:#8fa5c0;border:1px solid rgba(110,132,158,.2);}
+.ai-block{background:rgba(255,63,63,.04);border:1px solid rgba(255,63,63,.2);border-radius:14px;padding:16px;margin-bottom:12px;}
+.ai-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.ai-orb{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#ff6628,#ff3f3f);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.ai-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;}
+.ai-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(255,63,63,.1);color:#ff3f3f;border:1px solid rgba(255,63,63,.2);margin-left:auto;}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,63,63,.2);border-top-color:#ff3f3f;border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px;}
 @keyframes sp{to{transform:rotate(360deg)}}
+.taric-item{display:flex;align-items:center;gap:8px;padding:9px 10px;background:#131d2e;border:1px solid #223350;border-radius:8px;margin-bottom:6px;cursor:pointer;}
+.taric-code{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:#00dfa0;min-width:80px;}
+.taric-desc{font-size:11px;color:#8fa5c0;flex:1;}
+.taric-rate{font-size:13px;font-weight:700;}
+.poids-box{background:rgba(74,154,255,.04);border:1px solid rgba(74,154,255,.15);border-radius:9px;padding:10px;margin-top:8px;font-size:12px;color:#78b8ff;}
+.src-row{display:flex;align-items:center;gap:6px;margin-top:10px;padding:7px 10px;background:#131d2e;border-radius:7px;font-size:11px;color:#6e849e;}
+.srdot{width:5px;height:5px;border-radius:50%;background:#00dfa0;flex-shrink:0;}
+.srdate{margin-left:auto;font-style:italic;}
 </style>
 </head>
 <body>
 
-<h1>ImportCalc V3 — Chine vers Monde</h1>
+<div style="text-align:center;margin-bottom:20px;">
+  <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:10px;">
+    <div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#ff6628,#ff3f3f);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 6px 18px rgba(255,63,63,.25);">&#x1F6A2;</div>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;">Import<span style="color:#ff3f3f;">Calc</span> <span style="font-size:11px;background:rgba(255,63,63,.14);color:#ff3f3f;border:1px solid rgba(255,63,63,.2);border-radius:6px;padding:2px 7px;">V3</span></div>
+  </div>
+  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:28px;line-height:1.1;margin-bottom:8px;">Chine <span style="color:#ff3f3f;">&#8594;</span> Monde</div>
+  <div style="color:#8fa5c0;font-size:13px;margin-bottom:12px;">Simulateur import Chine vers France, Maroc ou Congo-Brazzaville</div>
+  <div class="badges" style="justify-content:center;">
+    <span class="badge green">&#9889; TARIC temps reel</span>
+    <span class="badge blue">&#127758; 3 pays</span>
+    <span class="badge">&#9992; Aerien</span>
+    <span class="badge">&#9875; Maritime</span>
+    <span class="badge green">&#x1F916; Analyse Claude AI</span>
+  </div>
+</div>
 
 <div class="step-row">
-  <div class="dot on" id="s1">1</div>
-  <div class="line" id="l1"></div>
-  <div class="dot" id="s2">2</div>
-  <div class="line" id="l2"></div>
-  <div class="dot" id="s3">3</div>
-  <div class="line" id="l3"></div>
+  <div class="dot on" id="s1">1</div><div class="line" id="l1"></div>
+  <div class="dot" id="s2">2</div><div class="line" id="l2"></div>
+  <div class="dot" id="s3">3</div><div class="line" id="l3"></div>
   <div class="dot" id="s4">4</div>
 </div>
+<div id="step-lbl" style="font-size:12px;color:#8fa5c0;font-weight:600;margin-bottom:16px;">Etape 1 / 4 — Destination et Produit</div>
 
-<!-- ETAPE 1 -->
+<!-- PAGE 1 -->
 
-<div id="page1" class="card">
-  <h3>Etape 1 / 4 — Destination et Produit</h3>
+<div id="p1" class="card">
+  <h3>Destination et Produit</h3>
+  <div class="desc">Choisissez votre pays de destination et decrivez votre produit.</div>
   <label>Pays de destination</label>
   <select id="pays">
-    <option value="france">France</option>
-    <option value="maroc">Maroc</option>
-    <option value="congo">Congo-Brazzaville</option>
+    <option value="france">&#x1F1EB;&#x1F1F7; France</option>
+    <option value="maroc">&#x1F1F2;&#x1F1E6; Maroc</option>
+    <option value="congo">&#x1F1E8;&#x1F1EC; Congo-Brazzaville</option>
   </select>
-  <label>Type de produit *</label>
-  <input id="type" type="text" placeholder="Ex: veste, telephone, velo electrique"/>
-  <label>Description (facultatif)</label>
-  <input id="desc" type="text" placeholder="Ex: veste homme polyester sans marque"/>
-  <label>Code HS (facultatif)</label>
-  <input id="hs" type="text" placeholder="Ex: 620140" maxlength="10"/>
-  <p id="e1" style="color:#ff7060;font-size:13px;display:none;margin-bottom:8px;">Le type de produit est obligatoire.</p>
-  <button class="btn" onclick="go2()">Suivant — Valeur</button>
+  <div class="grid2">
+    <div>
+      <label>Type de produit *</label>
+      <input id="type" type="text" placeholder="Ex: veste, velo electrique..."/>
+    </div>
+    <div>
+      <label>Description (facultatif)</label>
+      <input id="desc" type="text" placeholder="Ex: veste homme polyester"/>
+    </div>
+  </div>
+  <div class="grid2">
+    <div>
+      <label>Code HS (6 chiffres)</label>
+      <input id="hs" type="text" placeholder="Ex: 620140" maxlength="8" oninput="onHsChange()"/>
+      <div style="font-size:11px;color:#6e849e;margin-top:-10px;margin-bottom:10px;">Recherche TARIC automatique (France)</div>
+    </div>
+    <div>
+      <label>Code TARIC (10 chiffres) — Prioritaire</label>
+      <input id="taric" type="text" placeholder="Ex: 6201401000" maxlength="10"/>
+      <div style="font-size:11px;color:#6e849e;margin-top:-10px;margin-bottom:10px;">Taux officiel UE — prioritaire sur HS</div>
+    </div>
+  </div>
+  <div id="taric-results" class="hidden" style="margin-bottom:12px;"></div>
+  <div>
+    <label>Pays de fabrication (facultatif)</label>
+    <input id="fab" type="text" placeholder="Ex: Chine"/>
+  </div>
+  <p id="e1" class="err">Le type de produit est obligatoire.</p>
+  <button class="btn" onclick="go2()">Suivant — Valeur et Quantite &#8594;</button>
 </div>
 
-<!-- ETAPE 2 -->
+<!-- PAGE 2 -->
 
-<div id="page2" class="card hidden">
-  <h3>Etape 2 / 4 — Valeur et Quantite</h3>
-  <label>Quantite *</label>
-  <input id="qte" type="number" placeholder="Ex: 10" min="1"/>
-  <label>Valeur totale marchandise *</label>
-  <input id="total" type="number" placeholder="Ex: 1200" min="0"/>
-  <label>Devise</label>
-  <select id="devise">
-    <option value="EUR">EUR - Euro</option>
-    <option value="USD">USD - Dollar</option>
-    <option value="CNY">CNY - Yuan chinois</option>
-  </select>
-  <label>Poids total en kg (facultatif)</label>
-  <input id="poids" type="number" placeholder="Ex: 25" min="0"/>
-  <p id="e2" style="color:#ff7060;font-size:13px;display:none;margin-bottom:8px;">Quantite et valeur sont obligatoires.</p>
-  <button class="btn" onclick="go3()">Suivant — Transport</button>
-  <button class="btn btn-sec" onclick="back(1)">Retour</button>
+<div id="p2" class="card hidden">
+  <h3>Valeur et Quantite</h3>
+  <div class="desc">Base de calcul des taxes. Valeur = montant paye au fournisseur hors transport.</div>
+  <div class="grid2">
+    <div>
+      <label>Quantite *</label>
+      <input id="qte" type="number" placeholder="Ex: 20" min="1"/>
+    </div>
+    <div>
+      <label>Devise</label>
+      <select id="devise">
+        <option value="EUR">EUR — Euro</option>
+        <option value="USD">USD — Dollar</option>
+        <option value="CNY">CNY — Yuan</option>
+      </select>
+    </div>
+  </div>
+  <div>
+    <label>Valeur totale marchandise *</label>
+    <input id="total" type="number" placeholder="Ex: 1200" min="0"/>
+    <div style="font-size:11px;color:#6e849e;margin-top:-10px;margin-bottom:13px;">Montant fournisseur hors transport</div>
+  </div>
+  <div class="grid2">
+    <div>
+      <label>Poids reel total (kg)</label>
+      <input id="poids" type="number" placeholder="Ex: 48" min="0"/>
+    </div>
+    <div>
+      <label>Volume total (m3 / CBM)</label>
+      <input id="volume" type="text" placeholder="Ex: 0.60"/>
+      <div style="font-size:11px;color:#6e849e;margin-top:-10px;margin-bottom:13px;">1m3 = 167kg aerien / 1000kg maritime</div>
+    </div>
+  </div>
+  <p id="e2" class="err">Quantite et valeur totale sont obligatoires.</p>
+  <button class="btn" onclick="go3()">Suivant — Transport &#8594;</button>
+  <button class="btn btn-sec" onclick="back(1)">&#8592; Retour</button>
 </div>
 
-<!-- ETAPE 3 -->
+<!-- PAGE 3 -->
 
-<div id="page3" class="card hidden">
-  <h3>Etape 3 / 4 — Transport</h3>
+<div id="p3" class="card hidden">
+  <h3>Transport et Livraison</h3>
+  <div class="desc">Mode de transport, incoterm et details logistiques.</div>
   <label>Mode de transport</label>
-  <select id="mode">
-    <option value="aerien">Aerien / Express</option>
-    <option value="maritime">Maritime</option>
-  </select>
-  <label>Cout transport en EUR *</label>
-  <input id="cout" type="number" placeholder="Ex: 280" min="0"/>
-  <label>Incoterm</label>
-  <select id="inco">
-    <option value="CIF">CIF — Cost Insurance Freight</option>
-    <option value="FOB">FOB — Free On Board</option>
-    <option value="DAP">DAP — Delivered At Place</option>
-    <option value="DDP">DDP — Delivered Duty Paid</option>
-    <option value="EXW">EXW — Ex Works</option>
-  </select>
-  <label>Transporteur</label>
-  <select id="trans">
-    <option value="Non precis">Non precis</option>
-    <option value="DHL">DHL</option>
-    <option value="UPS">UPS</option>
-    <option value="FedEx">FedEx</option>
-    <option value="Colissimo">Colissimo</option>
-    <option value="ePacket">ePacket</option>
-  </select>
-  <p id="e3" style="color:#ff7060;font-size:13px;display:none;margin-bottom:8px;">Le cout de transport est obligatoire.</p>
-  <button class="btn" onclick="go4()">Suivant — Statut</button>
-  <button class="btn btn-sec" onclick="back(2)">Retour</button>
+  <div class="mode-tabs" style="margin-bottom:14px;">
+    <button class="mode-tab active" id="tab-aerien" onclick="setMode('aerien')">&#9992; Aerien / Express</button>
+    <button class="mode-tab" id="tab-maritime" onclick="setMode('maritime')">&#9875; Maritime</button>
+  </div>
+  <!-- AERIEN -->
+  <div id="sec-aerien">
+    <div class="grid2">
+      <div>
+        <label>Transporteur</label>
+        <select id="trans-a">
+          <option value="Non precis">Non precis</option>
+          <option value="DHL">DHL</option>
+          <option value="UPS">UPS</option>
+          <option value="FedEx">FedEx</option>
+          <option value="Colissimo">Colissimo</option>
+          <option value="ePacket">ePacket</option>
+          <option value="4PX">4PX</option>
+          <option value="Yanwen">Yanwen</option>
+          <option value="Fournisseur">Via fournisseur</option>
+        </select>
+      </div>
+      <div>
+        <label>Cout transport EUR *</label>
+        <input id="cout-a" type="number" placeholder="Ex: 280" min="0"/>
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <label>Incoterm</label>
+        <select id="inco-a">
+          <option value="CIF">CIF</option>
+          <option value="FOB">FOB</option>
+          <option value="DAP">DAP</option>
+          <option value="DDP">DDP</option>
+          <option value="EXW">EXW</option>
+          <option value="CPT">CPT</option>
+          <option value="Non precis">Non precis</option>
+        </select>
+      </div>
+      <div>
+        <label>Livraison incluse jusqu'a</label>
+        <select id="liv">
+          <option value="Domicile">Domicile</option>
+          <option value="Douane/Aeroport">Douane / Aeroport</option>
+          <option value="Non precis">Non precis</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- MARITIME -->
+  <div id="sec-maritime" class="hidden">
+    <div class="alert a-warn" style="margin-bottom:14px;"><span class="ico">!</span><span>La marchandise arrive au port. Un transitaire est generalement necessaire. Des frais portuaires s'ajoutent (THC, B/L, manutention). Ces frais sont des estimations.</span></div>
+    <div class="grid2">
+      <div>
+        <label>Compagnie maritime</label>
+        <select id="compagnie">
+          <option value="Non precise">Non precise</option>
+          <option value="MSC">MSC</option>
+          <option value="Maersk">Maersk</option>
+          <option value="CMA CGM">CMA CGM</option>
+          <option value="COSCO">COSCO</option>
+          <option value="Evergreen">Evergreen</option>
+          <option value="Hapag-Lloyd">Hapag-Lloyd</option>
+        </select>
+      </div>
+      <div>
+        <label>Type de conteneur</label>
+        <select id="conteneur">
+          <option value="LCL">LCL — Groupage</option>
+          <option value="FCL20">FCL 20 pieds</option>
+          <option value="FCL40">FCL 40 pieds</option>
+          <option value="FCL40HC">FCL 40 HC</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <label>Cout fret maritime EUR *</label>
+        <input id="cout-m" type="number" placeholder="Ex: 800" min="0"/>
+      </div>
+      <div>
+        <label>Port d'arrivee</label>
+        <select id="port">
+          <option value="Non precis">Non precis</option>
+          <option value="Marseille">Marseille</option>
+          <option value="Le Havre">Le Havre</option>
+          <option value="Tanger Med">Tanger Med</option>
+          <option value="Casablanca">Casablanca</option>
+          <option value="Pointe-Noire">Pointe-Noire</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <label>Incoterm</label>
+        <select id="inco-m">
+          <option value="CIF">CIF</option>
+          <option value="FOB">FOB</option>
+          <option value="CFR">CFR</option>
+          <option value="DAP">DAP</option>
+          <option value="DDP">DDP</option>
+          <option value="EXW">EXW</option>
+          <option value="Non precis">Non precis</option>
+        </select>
+      </div>
+      <div>
+        <label>Transitaire prevu</label>
+        <select id="transitaire">
+          <option value="Non su">Non su</option>
+          <option value="Oui prevu">Oui prevu</option>
+          <option value="Non pas encore">Non pas encore</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <p id="e3" class="err">Le cout de transport est obligatoire.</p>
+  <button class="btn" onclick="go4()">Suivant — Statut et Risques &#8594;</button>
+  <button class="btn btn-sec" onclick="back(2)">&#8592; Retour</button>
 </div>
 
-<!-- ETAPE 4 -->
+<!-- PAGE 4 -->
 
-<div id="page4" class="card hidden">
-  <h3>Etape 4 / 4 — Statut Import</h3>
-  <label>Mode achat</label>
-  <select id="achat">
-    <option value="Particulier">Particulier</option>
-    <option value="Professionnel">Professionnel</option>
+<div id="p4" class="card hidden">
+  <h3>Statut Import et Risques</h3>
+  <div class="desc">L'analyse verifie la coherence de votre situation et signale les risques reels.</div>
+  <div class="grid2">
+    <div>
+      <label>Mode d'achat</label>
+      <select id="achat">
+        <option value="Particulier">Particulier</option>
+        <option value="Professionnel">Professionnel</option>
+      </select>
+    </div>
+    <div>
+      <label>Usage prevu</label>
+      <select id="usage">
+        <option value="Usage personnel">Usage personnel</option>
+        <option value="Revente">Revente</option>
+        <option value="Equipement activite">Equipement activite pro</option>
+      </select>
+    </div>
+  </div>
+  <label>Caracteristiques sensibles (selectionnez tout ce qui s'applique)</label>
+  <select id="sensibles" multiple style="height:120px;margin-bottom:13px;">
+    <option value="Batterie">Batterie / Lithium</option>
+    <option value="Electronique">Electronique</option>
+    <option value="Textile">Textile</option>
+    <option value="Alimentaire">Alimentaire</option>
+    <option value="Cosmetique">Cosmetique</option>
+    <option value="Volumineux">Produit volumineux</option>
   </select>
-  <label>Usage prevu</label>
-  <select id="usage">
-    <option value="Usage personnel">Usage personnel</option>
-    <option value="Revente">Revente</option>
-    <option value="Equipement activite">Equipement activite pro</option>
-  </select>
-  <button class="btn" onclick="calcul()">Lancer le calcul</button>
-  <button class="btn btn-sec" onclick="back(3)">Retour</button>
+  <div style="font-size:11px;color:#6e849e;margin-top:-10px;margin-bottom:13px;">Maintenez appuye pour selectionner plusieurs</div>
+  <label>Remarques fournisseur (facultatif)</label>
+  <textarea id="remarques" placeholder="Ex: fournisseur dit livraison domicile mais douane non incluse..." style="min-height:70px;margin-bottom:13px;"></textarea>
+  <button class="btn" onclick="lancer()">Lancer l'analyse complete &#9889;</button>
+  <button class="btn btn-sec" onclick="back(3)">&#8592; Retour</button>
 </div>
 
-<!-- RESULTAT -->
+<!-- PAGE RESULTAT -->
 
-<div id="page5" class="hidden"></div>
+<div id="p5" class="hidden"></div>
 
 <script>
+var MODE = 'aerien';
+var TARIC_SELECTED = {code:'', rate:null};
+var TARIC_TIMER = null;
+
 var CONV = {EUR:1, USD:0.92, CNY:0.128};
 var TVA_TAUX = {france:20, maroc:20, congo:18.9};
+
 var DROITS = {
   france:{veste:12,textile:12,vetement:12,pantalon:12,chemise:12,robe:12,chaussure:17,sac:3.7,electronique:0,ordinateur:0,telephone:0,smartphone:0,tablette:0,casque:0,cable:0,velo:15,trottinette:15,jouet:4.7,meuble:5.6,luminaire:4.7,cosmetique:6.5,alimentaire:12,machine:2.7,outil:2.7,sport:4.7,def:5},
   maroc:{veste:25,textile:25,vetement:25,pantalon:25,chaussure:40,sac:17.5,electronique:2.5,ordinateur:2.5,telephone:2.5,smartphone:2.5,tablette:2.5,velo:25,trottinette:25,jouet:17.5,meuble:40,luminaire:25,cosmetique:25,alimentaire:25,machine:10,outil:10,sport:17.5,def:17.5},
   congo:{electronique:10,ordinateur:10,telephone:10,smartphone:10,tablette:10,machine:5,outil:5,textile:20,vetement:20,veste:20,chaussure:30,sac:20,luminaire:20,meuble:20,jouet:20,cosmetique:30,alimentaire:20,velo:20,trottinette:20,sport:20,def:20}
 };
 
+var DOSSIER = {DHL:27,UPS:27,FedEx:22,Colissimo:12,ePacket:8,'4PX':10,Yanwen:10,'Non precis':18,Fournisseur:18};
+
+var INCO_DATA = {
+  CIF:{label:'Cost Insurance Freight',fourn:['Transport usine vers port depart','Formalites export Chine','Fret','Assurance'],vous:['Frais portuaires arrivee (THC, B/L)','Droits douane + TVA','Transitaire pour sortir du port']},
+  FOB:{label:'Free On Board',fourn:['Transport vers port export','Formalites export','Chargement bateau'],vous:['Fret maritime','Assurance','Frais portuaires','Droits douane + TVA','Transitaire obligatoire']},
+  DAP:{label:'Delivered At Place',fourn:['Transport complet vers destination','Fret + assurance inclus'],vous:['Droits douane + TVA uniquement']},
+  DDP:{label:'Delivered Duty Paid',fourn:['Tout inclus — livraison cle en main','Droits douane + TVA payes par fournisseur'],vous:['Rien a payer a l\'arrivee']},
+  EXW:{label:'Ex Works',fourn:['Mise a disposition en usine uniquement'],vous:['Tout : transport, fret, assurance, douane, TVA']},
+  CFR:{label:'Cost and Freight',fourn:['Transport vers port depart','Fret maritime'],vous:['Assurance','Frais portuaires','Droits douane + TVA']},
+  CPT:{label:'Carriage Paid To',fourn:['Fret vers destination'],vous:['Assurance','Droits douane + TVA']},
+  'Non precis':{label:'Non precise',fourn:['Non determine'],vous:['A clarifier avec le fournisseur']}
+};
+
+var FRAIS_PORT = {
+  LCL:{france:{thc:120,bl:40,manu:80,stock:40,transit:320},maroc:{thc:100,bl:35,manu:70,stock:35,transit:280},congo:{thc:160,bl:55,manu:180,stock:120,transit:480}},
+  FCL20:{france:{thc:200,bl:50,manu:150,stock:60,transit:400},maroc:{thc:170,bl:45,manu:130,stock:55,transit:350},congo:{thc:250,bl:70,manu:250,stock:180,transit:600}},
+  FCL40:{france:{thc:280,bl:60,manu:200,stock:80,transit:480},maroc:{thc:240,bl:55,manu:170,stock:70,transit:420},congo:{thc:350,bl:90,manu:320,stock:220,transit:720}},
+  FCL40HC:{france:{thc:300,bl:65,manu:220,stock:90,transit:500},maroc:{thc:260,bl:60,manu:190,stock:80,transit:440},congo:{thc:380,bl:100,manu:350,stock:250,transit:750}}
+};
+
 function g(id){return document.getElementById(id);}
-function val(id){return g(id).value.trim();}
+function v(id){var el=g(id);return el?el.value.trim():'';}
 function show(id){g(id).classList.remove('hidden');}
 function hide(id){g(id).classList.add('hidden');}
 
+function getSensibles(){
+  var sel=g('sensibles');
+  var arr=[];
+  for(var i=0;i<sel.options.length;i++){
+    if(sel.options[i].selected) arr.push(sel.options[i].value);
+  }
+  return arr;
+}
+
 function updateDots(step){
+  var labels=['Destination et Produit','Valeur et Quantite','Transport','Statut et Risques'];
   for(var i=1;i<=4;i++){
-    var d=g('s'+i), l=i<4?g('l'+i):null;
-    if(i<step){d.className='dot on';d.textContent='ok';if(l)l.style.background='#00dfa0';}
-    else if(i===step){d.className='dot on';d.textContent=String(i);if(l)l.style.background='#223350';}
-    else{d.className='dot';d.textContent=String(i);if(l)l.style.background='#223350';}
+    var d=g('s'+i),l=i<4?g('l'+i):null;
+    if(i<step){d.className='dot done';d.textContent='ok';if(l){l.className='line done';}}
+    else if(i===step){d.className='dot on';d.textContent=String(i);if(l){l.className='line';}}
+    else{d.className='dot';d.textContent=String(i);if(l){l.className='line';}}
+  }
+  if(step<=4) g('step-lbl').textContent='Etape '+step+' / 4 — '+labels[step-1];
+}
+
+function setMode(m){
+  MODE=m;
+  g('tab-aerien').className='mode-tab'+(m==='aerien'?' active':'');
+  g('tab-maritime').className='mode-tab'+(m==='maritime'?' active':'');
+  m==='aerien'?show('sec-aerien'):hide('sec-aerien');
+  m==='maritime'?show('sec-maritime'):hide('sec-maritime');
+}
+
+function onHsChange(){
+  clearTimeout(TARIC_TIMER);
+  var hs=v('hs');
+  if(hs.length>=6 && v('pays')==='france'){
+    TARIC_TIMER=setTimeout(function(){fetchTaric(hs);},800);
   }
 }
 
-function go2(){
-  if(!val('type')){g('e1').style.display='block';return;}
-  g('e1').style.display='none';
-  hide('page1');show('page2');updateDots(2);window.scrollTo(0,0);
+function fetchTaric(hs){
+  var box=g('taric-results');
+  box.innerHTML='<div style="font-size:12px;color:#6e849e;padding:8px 0;"><span class="spinner"></span> Recherche TARIC sur tarifdouanier.eu...</div>';
+  show('taric-results');
+  fetch('https://www.tarifdouanier.eu/api/v1/cnSuggest?term='+encodeURIComponent(hs)+'&lang=fr&year=2026')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!Array.isArray(data)||data.length===0){
+        box.innerHTML='<div style="font-size:12px;color:#fbbf24;padding:6px 0;">Aucun code TARIC trouve. Saisissez-le manuellement ou consultez taric.europa.eu</div>';
+        return;
+      }
+      var html='<div style="font-size:11px;font-weight:700;color:#fbbf24;margin-bottom:6px;">Codes TARIC trouves — cliquez pour selectionner :</div>';
+      data.slice(0,5).forEach(function(r,i){
+        var code=r.id||r.code||r.cn_code||'';
+        var desc=r.description||r.desc||r.label||'';
+        var rate=r.duty_rate||r.rate||null;
+        var rateStr=rate!=null?parseFloat(rate)+'%':'taux a verifier';
+        html+='<div class="taric-item" onclick="selectTaric(\''+code+'\','+rate+')">'
+          +'<span class="taric-code">'+code+'</span>'
+          +'<span class="taric-desc">'+desc+'</span>'
+          +'<span class="taric-rate">'+rateStr+'</span>'
+          +'</div>';
+      });
+      box.innerHTML=html;
+    })
+    .catch(function(){
+      box.innerHTML='<div style="font-size:12px;color:#ff8070;padding:6px 0;">Erreur de connexion TARIC. Saisissez le code manuellement.</div>';
+    });
 }
 
-function go3(){
-  if(!val('qte')||!val('total')){g('e2').style.display='block';return;}
-  g('e2').style.display='none';
-  hide('page2');show('page3');updateDots(3);window.scrollTo(0,0);
-}
-
-function go4(){
-  if(!val('cout')){g('e3').style.display='block';return;}
-  g('e3').style.display='none';
-  hide('page3');show('page4');updateDots(4);window.scrollTo(0,0);
-}
-
-function back(n){
-  hide('page'+(n+1));show('page'+n);updateDots(n);window.scrollTo(0,0);
+function selectTaric(code,rate){
+  TARIC_SELECTED={code:code,rate:rate?parseFloat(rate):null};
+  g('taric').value=code;
+  g('taric-results').innerHTML='<div class="alert a-ok"><span class="ico">ok</span><span>Code TARIC '+code+' selectionne — taux certifie'+(rate!=null?' : '+parseFloat(rate)+'%':'')+'</span></div>';
 }
 
 function getTaux(type,pays){
@@ -201,116 +499,376 @@ function getTaux(type,pays){
   return t.def;
 }
 
+function getPoidsChargeable(poidsKg,volM3,mode){
+  if(!poidsKg&&!volM3) return null;
+  var pk=parseFloat(poidsKg)||0;
+  var vm=parseFloat(volM3)||0;
+  var pv=mode==='aerien'?vm*167:vm*1000;
+  if(!pk&&!vm) return null;
+  var c=Math.max(pk,pv);
+  return {chargeable:c,reel:pk,vol:pv,est_vol:pv>pk};
+}
+
 function fmt(n){
   return parseFloat(n).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' EUR';
 }
 
-function calcul(){
-  var pays=val('pays');
-  var type=val('type');
-  var conv=CONV[val('devise')]||1;
-  var valEUR=parseFloat(val('total'))*conv;
-  var cout=parseFloat(val('cout'))||0;
+function go2(){
+  if(!v('type')){g('e1').style.display='block';return;}
+  g('e1').style.display='none';
+  hide('p1');show('p2');updateDots(2);window.scrollTo(0,0);
+}
+
+function go3(){
+  if(!v('qte')||!v('total')){g('e2').style.display='block';return;}
+  g('e2').style.display='none';
+  hide('p2');show('p3');updateDots(3);window.scrollTo(0,0);
+}
+
+function go4(){
+  var cout=MODE==='aerien'?v('cout-a'):v('cout-m');
+  if(!cout){g('e3').style.display='block';return;}
+  g('e3').style.display='none';
+  hide('p3');show('p4');updateDots(4);window.scrollTo(0,0);
+}
+
+function back(n){
+  hide('p'+(n+1));show('p'+n);updateDots(n);window.scrollTo(0,0);
+}
+
+function lancer(){
+  hide('p4');
+  hide('step-lbl');
+  var res=buildResult();
+  g('p5').innerHTML=res.html;
+  show('p5');
+  window.scrollTo(0,0);
+  setTimeout(function(){callClaude(res.data);},600);
+}
+
+function buildResult(){
+  var pays=v('pays');
+  var type=v('type');
+  var desc=v('desc');
+  var taricCode=v('taric')||TARIC_SELECTED.code;
+  var taricRate=TARIC_SELECTED.rate;
+  var conv=CONV[v('devise')]||1;
+  var valEUR=(parseFloat(v('total'))||0)*conv;
+  var cout=MODE==='aerien'?(parseFloat(v('cout-a'))||0):(parseFloat(v('cout-m'))||0);
   var base=valEUR+cout;
-  var taux=getTaux(type,pays);
+  var qte=parseInt(v('qte'))||1;
+
+  var taux,tauxSource,tauxPrec;
+  if(pays==='france'&&taricCode&&taricRate!=null){
+    taux=taricRate;tauxSource='TARIC '+taricCode+' — taux certifie officiellement';tauxPrec='high';
+  } else if(pays==='france'&&v('hs')){
+    taux=getTaux(type,pays);tauxSource='Code HS '+v('hs')+' — taux estime par categorie';tauxPrec='med';
+  } else if(pays==='france'){
+    taux=getTaux(type,pays);tauxSource='Estimation par categorie — verifier sur taric.europa.eu';tauxPrec='low';
+  } else if(pays==='maroc'){
+    taux=getTaux(type,pays);tauxSource='Tarif ADIL Maroc (douane.gov.ma) — taux par categorie';tauxPrec='med';
+  } else {
+    taux=getTaux(type,pays);tauxSource='Tarif Exterieur Commun CEMAC — taux par categorie';tauxPrec='med';
+  }
+
   var tvaPct=TVA_TAUX[pays]||20;
   var dd=base*taux/100;
   var tva=(base+dd)*tvaPct/100;
+
+  var extraTaxes=[];
+  if(pays==='maroc') extraTaxes.push({label:'TPI — Taxe Parafiscale Import (0,25%)',val:base*0.0025});
+  if(pays==='congo'){
+    extraTaxes.push({label:'TCI — Taxe Communautaire Integration (1%)',val:(base+dd)*0.01});
+    extraTaxes.push({label:'TIPAC (0,4%)',val:(base+dd)*0.004});
+  }
+  var totalExtra=extraTaxes.reduce(function(a,b){return a+b.val;},0);
+
+  var trans=MODE==='aerien'?v('trans-a'):'Non precis';
+  var dossier=DOSSIER[trans]||18;
   var divers=Math.round(valEUR*0.01);
-  var dossier=val('trans')==='DHL'||val('trans')==='UPS'?27:val('trans')==='FedEx'?22:18;
-  var total=valEUR+cout+dd+tva+divers+dossier;
+
+  var fraisPort=null,totalPort=0;
+  if(MODE==='maritime'){
+    var cont=v('conteneur').split(' ')[0];
+    var fp=FRAIS_PORT[cont]||FRAIS_PORT.LCL;
+    fraisPort=fp[pays]||fp.france;
+    totalPort=fraisPort.thc+fraisPort.bl+fraisPort.manu+fraisPort.stock+fraisPort.transit;
+  }
+
+  var poidsInfo=getPoidsChargeable(v('poids'),v('volume'),MODE);
+  var total=valEUR+cout+dd+tva+totalExtra+dossier+divers+totalPort;
 
   var paysLabel=pays==='france'?'France':pays==='maroc'?'Maroc':'Congo-Brazzaville';
-  var isRevente=val('usage')==='Revente';
-  var isParticulier=val('achat')==='Particulier';
+  var inco=MODE==='aerien'?v('inco-a'):v('inco-m');
+  var incoData=INCO_DATA[inco]||INCO_DATA['Non precis'];
+  var achat=v('achat'),usage=v('usage');
+  var sensibles=getSensibles();
+  var today=new Date().toLocaleDateString('fr-FR');
 
-  var html='<div class="card" style="text-align:center;">'
-    +'<div style="font-size:11px;color:#8fa5c0;letter-spacing:.08em;margin-bottom:4px;">TOTAL ESTIME - '+paysLabel.toUpperCase()+'</div>'
-    +'<div class="result-big">'+fmt(total)+'</div>'
-    +'<div style="font-size:12px;color:#6e849e;">'+fmt(valEUR)+' marchandise + '+fmt(total-valEUR)+' taxes et frais</div>'
-    +'</div>'
-    +'<div class="card">'
-    +'<h3 style="margin-bottom:12px;">Detail des couts</h3>'
-    +'<div class="row"><span>Valeur marchandise</span><b>'+fmt(valEUR)+'</b></div>'
-    +'<div class="row"><span>Frais transport</span><b>'+fmt(cout)+'</b></div>'
-    +'<div class="row"><span>Droits douane ('+taux+'%)</span><b>'+fmt(dd)+'</b></div>'
-    +'<div class="row"><span>TVA ('+tvaPct+'%)</span><b>'+fmt(tva)+'</b></div>'
-    +'<div class="row"><span>Frais dossier et divers</span><b>'+fmt(dossier+divers)+'</b></div>'
-    +'<div class="row total"><span>TOTAL RENDU '+paysLabel.toUpperCase()+'</span><b>'+fmt(total)+'</b></div>'
-    +'</div>';
-
-  if(isRevente&&isParticulier){
-    html+='<div class="alert danger">ATTENTION : Revente declaree en mode Particulier = activite commerciale non declaree. Risque saisie et redressement douanier. Creez une micro-entreprise avant de commander.</div>';
-  }
-
+  // Alertes speciales antidumping et exonerations
+  var alertesSpeciales=[];
+  var tl=(type+' '+(desc||'')).toLowerCase();
   if(pays==='france'){
-    html+='<div class="alert ai">France : taux douanier '+taux+'% estime par categorie produit. Pour le taux exact, consultez taric.europa.eu avec votre code HS.</div>';
-  } else if(pays==='maroc'){
-    html+='<div class="alert ai">Maroc : taux '+taux+'% estime. Pour confirmation, consultez le portail ADIL sur douane.gov.ma.</div>';
-  } else {
-    html+='<div class="alert ai">Congo : taux CEMAC '+taux+'%. TCI 1% + TIPAC 0,4% + TVA 18,9% inclus dans le calcul.</div>';
+    if(tl.indexOf('voiture')>=0&&tl.indexOf('elect')>=0) alertesSpeciales.push({cls:'a-danger',txt:'DROITS COMPENSATEURS UE sur vehicules electriques chinois : +35,3% en plus des droits TARIC normaux depuis octobre 2024. Source : Reglement UE 2024/2754.'});
+    if((tl.indexOf('velo')>=0)||(tl.indexOf('e-bike')>=0)) alertesSpeciales.push({cls:'a-warn',txt:'Velos chinois : droits antidumping UE possibles (15% a 48,5% selon fabricant). Verifiez sur taric.europa.eu.'});
+    if(tl.indexOf('panneau solaire')>=0||tl.indexOf('solaire')>=0) alertesSpeciales.push({cls:'a-warn',txt:'Panneaux solaires chinois : droits antidumping UE applicables. Verifiez sur taric.europa.eu.'});
+    if(tl.indexOf('acier')>=0||tl.indexOf('metal')>=0) alertesSpeciales.push({cls:'a-warn',txt:'Produits en acier / metal : nombreuses mesures antidumping UE en vigueur. Taux jusqu\'a 70%+.'});
+    if(tl.indexOf('ceramique')>=0||tl.indexOf('porcelaine')>=0) alertesSpeciales.push({cls:'a-warn',txt:'Articles en ceramique : droits antidumping UE en vigueur. Verifiez sur taric.europa.eu.'});
+    if(tl.indexOf('contreplaque')>=0||tl.indexOf('parquet')>=0) alertesSpeciales.push({cls:'a-danger',txt:'Contreplaque / parquet bois dur : droits antidumping provisoires UE 25% a 62,4%.'});
+    if(tl.indexOf('bougie')>=0) alertesSpeciales.push({cls:'a-warn',txt:'Bougies chinoises : droits antidumping provisoires UE jusqu\'a 70,9%.'});
+  }
+  if(pays==='maroc'){
+    if(tl.indexOf('voiture')>=0&&tl.indexOf('elect')>=0) alertesSpeciales.push({cls:'a-ok',txt:'EXONERATION MAROC — Voiture 100% electrique : droits 2,5% + TVA 0% (au lieu de 17-40%). Certificat de conformite VOC obligatoire.'});
   }
 
-  html+='<div class="card">'
-    +'<h3 style="margin-bottom:8px;">Analyse Claude AI</h3>'
-    +'<div id="ai-zone"><span class="spinner"></span> Analyse en cours...</div>'
+  // Alertes generales
+  var alertes=[];
+  if(pays==='france'&&!taricCode&&!v('hs')) alertes.push({cls:'a-warn',txt:'Aucun code HS / TARIC — taux '+taux+'% estime. Demandez le code HS a votre fournisseur.'});
+  if(pays==='france'&&taricCode) alertes.push({cls:'a-ok',txt:'Code TARIC '+taricCode+' confirme — precision maximale du taux ('+taux+'%).'});
+  if(pays==='maroc') alertes.push({cls:'a-info',txt:'Maroc : pour le taux exact, consultez douane.gov.ma — portail ADIL avec votre code HS.'});
+  if(pays==='congo') alertes.push({cls:'a-info',txt:'Congo CEMAC : TCI 1% + TIPAC 0,4% + TVA 18,9% inclus dans le calcul. Source : Tarif Exterieur Commun CEMAC.'});
+  if(achat==='Particulier'&&usage==='Revente') alertes.push({cls:'a-danger',txt:'ATTENTION : Revente declaree en mode Particulier = activite commerciale non declaree. Risque de saisie et redressement douanier. Creez une micro-entreprise avant de commander.'});
+  if(achat==='Particulier'&&qte>5) alertes.push({cls:'a-warn',txt:qte+' unites en mode Particulier peut attirer l\'attention douaniere (requalification en import commercial possible).'});
+  if(inco==='Non precis') alertes.push({cls:'a-warn',txt:'Incoterm non precise — base CIF calculee. Demandez l\'incoterm exact a votre fournisseur.'});
+  if(sensibles.indexOf('Batterie')>=0) alertes.push({cls:'a-danger',txt:'Batteries lithium : rapport UN38.3 obligatoire. Verifiez conditions d\'acceptation DHL / FedEx / UPS AVANT de commander.'});
+  if(MODE==='maritime'){
+    alertes.push({cls:'a-info',txt:'Frais portuaires estimatifs (THC, B/L, manutention, transitaire). Demandez un devis a votre transitaire pour les tarifs exacts.'});
+    alertes.push({cls:'a-warn',txt:'Delai maritime Chine vers '+paysLabel+' : environ 25 a 35 jours. Planifiez en consequence.'});
+    if(pays==='congo') alertes.push({cls:'a-warn',txt:'Congo-Brazzaville : procedures douanieres 2 a 4 semaines. Transitaire local a Pointe-Noire fortement recommande.'});
+  }
+  if(pays==='maroc'&&valEUR>1000) alertes.push({cls:'a-info',txt:'Maroc : imports superieurs a 1000 EUR necessitent souvent une domiciliation bancaire. Verifiez avec votre banque au Maroc.'});
+
+  // Normes
+  var normes=[];
+  var hasBat=sensibles.indexOf('Batterie')>=0||tl.indexOf('batterie')>=0||tl.indexOf('trottinette')>=0||tl.indexOf('velo elect')>=0;
+  var hasElec=sensibles.indexOf('Electronique')>=0||tl.indexOf('electron')>=0||tl.indexOf('telephone')>=0||tl.indexOf('smartphone')>=0;
+  var hasText=sensibles.indexOf('Textile')>=0||tl.indexOf('veste')>=0||tl.indexOf('textile')>=0||tl.indexOf('vetement')>=0;
+  var hasAlim=sensibles.indexOf('Alimentaire')>=0||tl.indexOf('aliment')>=0;
+  var hasCosm=sensibles.indexOf('Cosmetique')>=0||tl.indexOf('cosmet')>=0||tl.indexOf('creme')>=0;
+  if(pays==='france'){
+    if(hasBat){normes.push({n:'req',t:'UN38.3 — Batteries lithium',d:'Rapport de test UN38.3 obligatoire. Sans ce document, DHL/FedEx/UPS refusent le colis.'});normes.push({n:'req',t:'Directive 2006/66/CE — Marquage piles',d:'Symbole poubelle barree obligatoire sur emballage.'});}
+    if(hasElec||hasBat) normes.push({n:'req',t:'Marquage CE + Directive RoHS',d:'Declaration de Conformite CE obligatoire. Sans CE, le produit ne peut pas etre commercialise en UE.'});
+    if(hasText){normes.push({n:'req',t:'Reglement UE 1007/2011 — Etiquetage fibres',d:'Etiquette en francais avec composition exacte des fibres obligatoire.'});normes.push({n:'req',t:'Conformite REACH',d:'Limites sur colorants azoiques, formaldehyde, metaux lourds. Certificat test REACH recommande.'});}
+    if(hasAlim) normes.push({n:'req',t:'Controle sanitaire DGAL/DGCCRF',d:'Certificat sanitaire obligatoire. Controle au point d\'entree UE.'});
+    if(hasCosm) normes.push({n:'req',t:'Notification CPNP + Reglement CE 1223/2009',d:'Notification CPNP avant commercialisation. Etiquetage INCI en francais requis.'});
+    if(normes.length===0) normes.push({n:'rec',t:'Verification Access2Markets',d:'Consultez trade.ec.europa.eu/access-to-markets avec votre code HS pour les exigences specifiques.'});
+    normes.push({n:'info',t:'Source officielle',d:'trade.ec.europa.eu (Access2Markets) et douane.gouv.fr (RITA)'});
+  } else if(pays==='maroc'){
+    normes.push({n:'req',t:'Declaration ADII — Douane Maroc',d:'Declaration en douane via ADIL obligatoire. Certificat origine chinois + facture commerciale + liste de colisage.'});
+    if(hasAlim) normes.push({n:'req',t:'Controle sanitaire ONSSA',d:'Autorisation d\'importation prealable obligatoire aupres de l\'ONSSA.'});
+    if(hasCosm) normes.push({n:'req',t:'Enregistrement DLIMI — Cosmetiques',d:'Enregistrement aupres de la DLIMI obligatoire avant commercialisation.'});
+    normes.push({n:'info',t:'Verification officielle',d:'douane.gov.ma (portail ADIL) pour les exigences exactes et produits soumis a autorisation.'});
+  } else {
+    normes.push({n:'req',t:'Dedouanement DGD Congo',d:'Transitaire agree obligatoire. Documents : facture, liste de colisage, B/L, certificat origine.'});
+    normes.push({n:'req',t:'Certificat d\'origine Form A',d:'Certifcat d\'origine chinois requis pour taux preferentiels.'});
+    if(hasAlim) normes.push({n:'req',t:'Controle sanitaire Congo',d:'Autorisation sanitaire d\'importation obligatoire.'});
+    normes.push({n:'info',t:'Source',d:'douanes.gouv.cg ou transitaire agree a Pointe-Noire.'});
+  }
+
+  // Comparaison aerien vs maritime
+  var poidsKg=parseFloat(v('poids'))||0;
+  var volM3=parseFloat(v('volume'))||0;
+  var tarifAerKg=pays==='congo'?7.5:pays==='maroc'?5.5:4.5;
+  var tarifMarCBM=pays==='congo'?280:pays==='maroc'?180:120;
+  var poidsAer=Math.max(poidsKg,volM3*167);
+  var fretAer=poidsAer>0?poidsAer*tarifAerKg:0;
+  var baseAer=valEUR+fretAer;
+  var ddAer=baseAer*taux/100;
+  var tvaAer=(baseAer+ddAer)*tvaPct/100;
+  var totalAer=valEUR+fretAer+ddAer+tvaAer+22+Math.round(valEUR*0.01);
+  var volEff=volM3>0?volM3:poidsKg/1000;
+  var fretMar=volEff>0?volEff*tarifMarCBM:0;
+  var fpLCL=FRAIS_PORT.LCL[pays]||FRAIS_PORT.LCL.france;
+  var fraisP=fpLCL.thc+fpLCL.bl+fpLCL.manu+fpLCL.stock+fpLCL.transit;
+  var baseMar=valEUR+fretMar;
+  var ddMar=baseMar*taux/100;
+  var tvaMar=(baseMar+ddMar)*tvaPct/100;
+  var totalMar=valEUR+fretMar+ddMar+tvaMar+fraisP+Math.round(valEUR*0.01);
+  var hasCompar=(poidsKg>0||volM3>0);
+
+  // Conseil conteneur
+  var conseilCont='';
+  var volTotal=volM3>0?volM3:poidsKg/1000;
+  if(volTotal>0&&volTotal<10) conseilCont='Votre volume ('+volTotal.toFixed(2)+' m3) < 10 m3 : le groupage LCL est plus economique.';
+  else if(volTotal>=10&&volTotal<22) conseilCont='Votre volume ('+volTotal.toFixed(2)+' m3) justifie un FCL 20 pieds (capacite ~25 m3).';
+  else if(volTotal>=22&&volTotal<60) conseilCont='Votre volume ('+volTotal.toFixed(2)+' m3) justifie un FCL 40 pieds.';
+  else if(volTotal>=60) conseilCont='Votre volume ('+volTotal.toFixed(2)+' m3) necessite un FCL 40 HC.';
+
+  // Perso vs pro
+  var isRev=usage==='Revente',isPart=achat==='Particulier';
+  var conseil='';
+  if(isRev&&isPart) conseil='Creez une micro-entreprise avant de commander — gratuit sur autoentrepreneur.urssaf.fr. Vous recupererez '+fmt(tva)+' de TVA et serez en regle.';
+  else if(MODE==='maritime') conseil='Contactez un transitaire agree pour un devis portuaire precis avant de finaliser votre commande.';
+  else if(!v('hs')&&!taricCode) conseil='Demandez le code HS a votre fournisseur — il le connait pour ses declarations export.';
+  else conseil='Demandez facture commerciale + liste de colisage a votre fournisseur — la douane les exige a l\'arrivee.';
+
+  var precClass=tauxPrec==='high'?'prec-high':tauxPrec==='med'?'prec-med':'prec-low';
+  var precLabel=tauxPrec==='high'?'Precision haute — TARIC certifie':tauxPrec==='med'?'Precision moyenne — taux par categorie':'Precision indicative — verifier sur taric.europa.eu';
+
+  // SOURCE LABEL
+  var srcLabel=pays==='france'?'TARIC UE (tarifdouanier.eu) + Access2Markets + douane.gouv.fr':pays==='maroc'?'Tarif ADIL Maroc (douane.gov.ma)':'Tarif Exterieur Commun CEMAC';
+
+  var html='';
+
+  // HERO
+  html+='<div class="result-hero">'
+    +'<div class="result-lbl">Cout total estime a l\'arrivee — '+paysLabel.toUpperCase()+'</div>'
+    +'<div class="result-total">'+fmt(total)+'</div>'
+    +'<div class="result-sub">'+fmt(valEUR)+' marchandise + '+fmt(cout)+' transport + '+fmt(total-valEUR-cout)+' taxes et frais</div>'
     +'</div>';
 
-  html+='<button class="btn btn-sec" style="margin-top:8px;" onclick="reset()">Nouvelle simulation</button>';
+  // ALERTES SPECIALES
+  if(alertesSpeciales.length>0){
+    html+='<div class="card">'
+      +'<div class="section-title">Alertes speciales — Exonerations et Antidumping</div>';
+    alertesSpeciales.forEach(function(a){html+='<div class="alert '+a.cls+'"><span class="ico">!</span><span>'+a.txt+'</span></div>';});
+    html+='</div>';
+  }
 
-  hide('page4');
-  g('page5').innerHTML=html;
-  show('page5');
-  updateDots(5);
-  window.scrollTo(0,0);
+  // ANALYSE CLAUDE
+  html+='<div class="ai-block">'
+    +'<div class="ai-head"><div class="ai-orb">*</div><div class="ai-title">Analyse Claude AI</div><span class="ai-badge">LIVE</span></div>'
+    +'<div id="ai-zone"><span class="spinner"></span> Analyse de votre dossier import en cours...</div>'
+    +'</div>';
 
-  setTimeout(function(){
-    callClaude(valEUR,cout,dd,tva,total,taux,tvaPct,paysLabel);
-  },600);
+  // DETAIL COUTS
+  html+='<div class="card">'
+    +'<div class="section-title">Detail des couts</div>'
+    +'<span class="prec '+precClass+'">'+precLabel+'</span>'
+    +'<div class="row"><div class="cleft"><div class="lft">Valeur marchandise<div class="expl">'+v('total')+' '+v('devise')+' x '+CONV[v('devise')]+'</div></div></div><div class="rgt">'+fmt(valEUR)+'</div></div>'
+    +'<div class="row"><div class="lft">Frais de transport<div class="expl">'+(MODE==='maritime'?'Maritime — '+(v('compagnie')||''):('Aerien — '+(trans||''))+'</div></div><div class="rgt">'+fmt(cout)+'</div></div>')
+    +'<div class="row"><div class="lft">Droits de douane ('+taux+'%)<div class="expl">'+tauxSource+'</div></div><div class="rgt">'+fmt(dd)+'</div></div>'
+    +'<div class="row"><div class="lft">TVA ('+tvaPct+'%)</div><div class="rgt">'+fmt(tva)+'</div></div>';
+  extraTaxes.forEach(function(e){html+='<div class="row"><div class="lft">'+e.label+'</div><div class="rgt">'+fmt(e.val)+'</div></div>';});
+  if(fraisPort){
+    html+='<div class="row"><div class="lft">THC — Terminal Handling Charge<div class="expl">Estimation</div></div><div class="rgt">'+fmt(fraisPort.thc)+'</div></div>'
+      +'<div class="row"><div class="lft">B/L — Bill of Lading<div class="expl">Estimation</div></div><div class="rgt">'+fmt(fraisPort.bl)+'</div></div>'
+      +'<div class="row"><div class="lft">Manutention et stockage port<div class="expl">Estimation</div></div><div class="rgt">'+fmt(fraisPort.manu+fraisPort.stock)+'</div></div>'
+      +'<div class="row"><div class="lft">Honoraires transitaire<div class="expl">Estimation</div></div><div class="rgt">'+fmt(fraisPort.transit)+'</div></div>';
+  }
+  html+='<div class="row"><div class="lft">Frais dossier transporteur<div class="expl">'+trans+'</div></div><div class="rgt">'+fmt(dossier)+'</div></div>'
+    +'<div class="row"><div class="lft">Frais divers (1%)</div><div class="rgt">'+fmt(divers)+'</div></div>'
+    +'<div class="row total"><div class="lft">TOTAL RENDU '+paysLabel.toUpperCase()+'</div><div class="rgt">'+fmt(total)+'</div></div>';
+  if(poidsInfo){
+    html+='<div class="poids-box">Poids chargeable : '+poidsInfo.chargeable.toFixed(1)+' kg'
+      +(poidsInfo.reel&&poidsInfo.vol?' (reel : '+poidsInfo.reel+' kg | volumetrique : '+poidsInfo.vol.toFixed(1)+' kg)':'')
+      +(poidsInfo.est_vol?' — poids volumetrique applique (superieur au poids reel)':'')+'</div>';
+  }
+  html+='<div class="src-row"><div class="srdot"></div><span>'+srcLabel+'</span><span class="srdate">'+today+'</span></div>'
+    +'</div>';
+
+  // INCOTERM
+  html+='<div class="card">'
+    +'<div class="section-title">Incoterm '+inco+' — Qui paie quoi</div>'
+    +'<div style="font-size:12px;font-weight:700;color:#78b8ff;margin-bottom:10px;">'+incoData.label+'</div>';
+  incoData.fourn.forEach(function(f){html+='<div class="inco-row"><span class="inco-who iw-four">Fournisseur</span><span style="color:#8fa5c0;">'+f+'</span></div>';});
+  incoData.vous.forEach(function(f){html+='<div class="inco-row"><span class="inco-who iw-vous">Vous</span><span style="color:#8fa5c0;">'+f+'</span></div>';});
+  html+='</div>';
+
+  // NORMES
+  html+='<div class="card">'
+    +'<div class="section-title">Normes et documents requis</div>';
+  normes.forEach(function(n){
+    if(n.n==='info'){html+='<div class="alert a-info"><span class="ico">i</span><span>'+n.d+'</span></div>';return;}
+    var cls=n.n==='req'?'nd-req':'nd-rec';
+    var tag=n.n==='req'?'ntag-req':'ntag-rec';
+    var tlabel=n.n==='req'?'obligatoire':'recommande';
+    html+='<div class="norm-item"><div class="ndot '+cls+'" style="margin-top:4px;"></div><div><div style="font-weight:600;color:#eef2ff;font-size:12px;margin-bottom:2px;">'+n.t+'<span class="ntag '+tag+'">'+tlabel+'</span></div><div style="font-size:11px;color:#8fa5c0;">'+n.d+'</div></div></div>';
+  });
+  html+='</div>';
+
+  // ALERTES
+  html+='<div class="card">'
+    +'<div class="section-title">Alertes et points de vigilance</div>';
+  alertes.forEach(function(a){html+='<div class="alert '+a.cls+'"><span class="ico">!</span><span>'+a.txt+'</span></div>';});
+  html+='</div>';
+
+  // COMPARAISON AERIEN VS MARITIME
+  if(hasCompar){
+    var winAer=totalAer<=totalMar;
+    html+='<div class="card">'
+      +'<div class="section-title">Aerien vs Maritime — Quel mode est le plus rentable ?</div>'
+      +'<div class="cmp-grid">'
+      +'<div class="cmp-card'+(winAer?' winner':'')+'"><div class="cmp-win">'+(winAer?'RECOMMANDE':'')+'</div><div class="cmp-title">Aerien</div><div class="cmp-price">'+fmt(totalAer)+'</div><div class="cmp-sub">Fret : '+fmt(fretAer)+'<br/>Delai : 5-10 jours</div></div>'
+      +'<div class="cmp-card'+(!winAer?' winner':'')+'"><div class="cmp-win">'+(!winAer?'RECOMMANDE':'')+'</div><div class="cmp-title">Maritime LCL</div><div class="cmp-price">'+fmt(totalMar)+'</div><div class="cmp-sub">Fret+port : '+fmt(fretMar+fraisP)+'<br/>Delai : 30-40 jours</div></div>'
+      +'</div>';
+    if(winAer) html+='<div class="alert a-ok"><span class="ico">ok</span><span>Aerien plus rentable : economie de '+fmt(totalMar-totalAer)+' vs maritime LCL. Les frais portuaires fixes ne sont pas amortis sur ce volume.</span></div>';
+    else html+='<div class="alert a-ok"><span class="ico">ok</span><span>Maritime plus rentable : economie de '+fmt(totalAer-totalMar)+' vs aerien. Les frais portuaires sont amortis sur votre volume.</span></div>';
+    if(conseilCont) html+='<div class="alert a-info"><span class="ico">i</span><span>Conseil conteneur : '+conseilCont+'</span></div>';
+    html+='<div style="font-size:11px;color:#6e849e;padding:8px 10px;background:#131d2e;border-radius:7px;margin-top:6px;">Estimation basee sur tarifs moyens marche : aerien '+tarifAerKg+' EUR/kg, maritime LCL '+tarifMarCBM+' EUR/m3.</div>';
+    html+='</div>';
+  }
+
+  // CONSEIL FINAL
+  html+='<div class="card">'
+    +'<div class="alert a-info"><span class="ico">-&gt;</span><span><strong>Conseil final :</strong> '+conseil+'</span></div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">'
+    +'<button class="btn btn-green" style="flex:1;" onclick="resetApp()">Nouvelle simulation</button>'
+    +'</div>'
+    +'<div style="text-align:center;color:#6e849e;font-size:11px;margin-top:12px;padding-top:10px;border-top:1px solid #1c2b40;">Estimation indicative. '+srcLabel+'. Pour declaration officielle, consultez un transitaire agree.</div>'
+    +'</div>';
+
+  return {
+    html:html,
+    data:{
+      type:type,desc:desc,pays:paysLabel,
+      qte:v('qte'),total:v('total'),devise:v('devise'),
+      valEUR:Math.round(valEUR),cout:Math.round(cout),
+      mode:MODE,incoterm:inco,
+      baseTaxable:Math.round(base),taux:taux,
+      dd:Math.round(dd),tva:Math.round(tva),tvaPct:tvaPct,
+      total_final:Math.round(total),
+      poids:v('poids'),volume:v('volume'),
+      taric:taricCode,
+      achat:achat,usage:usage,
+      sensibles:sensibles,
+      remarques:v('remarques')
+    }
+  };
 }
 
-function callClaude(valEUR,cout,dd,tva,total,taux,tvaPct,paysLabel){
+function callClaude(data){
   var zone=g('ai-zone');
   if(!zone) return;
   fetch('/.netlify/functions/claude',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({importData:{
-      type:val('type'),pays:paysLabel,
-      qte:val('qte'),total:val('total'),devise:val('devise'),
-      valEUR:Math.round(valEUR),cout:Math.round(cout),
-      mode:val('mode'),incoterm:val('inco'),
-      baseTaxable:Math.round(valEUR+cout),taux:taux,
-      dd:Math.round(dd),tva:Math.round(tva),tvaPct:tvaPct,
-      total_final:Math.round(total),
-      achat:val('achat'),usage:val('usage'),
-      sensibles:[],remarques:''
-    }})
+    body:JSON.stringify({importData:data})
   })
   .then(function(r){return r.json();})
-  .then(function(data){
-    if(!data.success||!data.analysis) throw new Error('Reponse invalide');
-    var a=data.analysis;
-    var rc=a.risque==='faible'?'ok':a.risque==='eleve'?'danger':'warn';
-    var html='<div class="alert '+rc+'" style="font-weight:700;margin-bottom:8px;">Risque : '+(a.risque||'moyen')+'</div>';
-    if(a.resume) html+='<p style="font-size:14px;margin-bottom:10px;">'+a.resume+'</p>';
-    if(a.points_cles){for(var i=0;i<a.points_cles.length;i++){html+='<div class="alert ai" style="margin-bottom:6px;">'+a.points_cles[i]+'</div>';}}
-    if(a.conseil_principal) html+='<div class="alert warn">Conseil : '+a.conseil_principal+'</div>';
-    if(a.optimisation) html+='<div class="alert ok">Optimisation : '+a.optimisation+'</div>';
+  .then(function(res){
+    if(!res.success||!res.analysis) throw new Error('Reponse invalide');
+    var a=res.analysis;
+    var rc=a.risque==='faible'?'a-ok':a.risque==='eleve'?'a-danger':'a-warn';
+    var html='<div class="alert '+rc+'" style="font-weight:700;margin-bottom:8px;"><span class="ico">'+(a.risque==='faible'?'ok':a.risque==='eleve'?'!':'!')+'</span><span>Risque '+(a.risque||'moyen')+'</span></div>';
+    if(a.resume) html+='<p style="font-size:14px;font-weight:600;color:#eef2ff;margin-bottom:10px;line-height:1.5;">'+a.resume+'</p>';
+    if(a.points_cles){a.points_cles.forEach(function(p){html+='<div class="alert a-info" style="margin-bottom:6px;"><span class="ico">-</span><span>'+p+'</span></div>';});}
+    if(a.alertes&&a.alertes.length){a.alertes.forEach(function(al){html+='<div class="alert a-danger" style="margin-bottom:6px;"><span class="ico">!</span><span>'+al+'</span></div>';});}
+    if(a.conseil_principal) html+='<div class="alert a-warn"><span class="ico">-&gt;</span><span>Conseil prioritaire : '+a.conseil_principal+'</span></div>';
+    if(a.optimisation) html+='<div class="alert a-ok"><span class="ico">eco</span><span>Optimisation : '+a.optimisation+'</span></div>';
+    html+='<div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,63,63,.15);font-size:10px;color:#6e849e;">Analyse generee par Claude (Anthropic) — indicatif</div>';
     zone.innerHTML=html;
   })
   .catch(function(err){
-    zone.innerHTML='<div class="alert danger">Erreur Claude : '+err.message+'</div>';
+    zone.innerHTML='<div class="alert a-danger"><span class="ico">!</span><span>Erreur Claude : '+err.message+'<br/><small>Verifiez que la cle API est configuree dans Netlify.</small></span></div>';
   });
 }
 
-function reset(){
-  g('page5').innerHTML='';
-  hide('page5');
-  g('type').value='';g('desc').value='';g('hs').value='';
-  g('qte').value='';g('total').value='';g('poids').value='';
-  g('cout').value='';
-  show('page1');updateDots(1);window.scrollTo(0,0);
+function resetApp(){
+  hide('p5');
+  g('p5').innerHTML='';
+  g('type').value='';g('desc').value='';g('hs').value='';g('taric').value='';g('fab').value='';
+  g('qte').value='';g('total').value='';g('poids').value='';g('volume').value='';
+  g('cout-a').value='';g('cout-m').value='';
+  g('remarques').value='';
+  TARIC_SELECTED={code:'',rate:null};
+  hide('taric-results');
+  MODE='aerien';
+  setMode('aerien');
+  show('p1');
+  show('step-lbl');
+  updateDots(1);
+  window.scrollTo(0,0);
 }
 </script>
 
