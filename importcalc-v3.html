@@ -393,9 +393,9 @@ var TVA_PAYS = { france: 20, maroc: 20, congo: 18.9 };
 function detecterAlertesSpeciales(type, desc, pays) {
 var alertes = [];
 var tl = (type + ’ ’ + (desc || ‘’)).toLowerCase()
-.replace(/é/g,‘e’).replace(/è/g,‘e’).replace(/ê/g,‘e’)
-.replace(/à/g,‘a’).replace(/â/g,‘a’).replace(/î/g,‘i’)
-.replace(/ô/g,‘o’).replace(/û/g,‘u’).replace(/ç/g,‘c’);
+.replace(/\u00e9/g,‘e’).replace(/\u00e8/g,‘e’).replace(/\u00ea/g,‘e’)
+.replace(/\u00e0/g,‘a’).replace(/\u00e2/g,‘a’).replace(/\u00ee/g,‘i’)
+.replace(/\u00f4/g,‘o’).replace(/\u00fb/g,‘u’).replace(/\u00e7/g,‘c’);
 var isVoitureElec = (tl.indexOf(‘voiture elect’) >= 0 || tl.indexOf(‘vehicule elect’) >= 0 || tl.indexOf(‘auto elect’) >= 0 || tl.indexOf(‘automobile elect’) >= 0 || (tl.indexOf(‘voiture’) >= 0 && tl.indexOf(‘elect’) >= 0) || (tl.indexOf(‘auto’) >= 0 && tl.indexOf(‘elect’) >= 0));
 var isVeloElec = (tl.indexOf(‘velo elect’) >= 0 || tl.indexOf(‘vae’) >= 0 || tl.indexOf(‘e-bike’) >= 0 || tl.indexOf(‘ebike’) >= 0);
 var isTrott = (tl.indexOf(‘trottinette’) >= 0);
@@ -427,7 +427,7 @@ return alertes;
 }
 
 function getTaux(type, pays) {
-var l = type.toLowerCase().replace(/[ée]/g, ‘e’).replace(/[àâ]/g, ‘a’);
+var l = type.toLowerCase().replace(/[\u00e9e]/g, ‘e’).replace(/[\u00e0\u00e2]/g, ‘a’);
 var rates = pays === ‘france’ ? TAUX_FR : pays === ‘maroc’ ? TAUX_MA : TAUX_CG;
 var keys = Object.keys(rates);
 for (var i = 0; i < keys.length; i++) {
@@ -437,7 +437,7 @@ return rates[‘default’];
 }
 
 function getTauxAjuste(type, desc, pays) {
-var tl = (type + ’ ’ + (desc || ‘’)).toLowerCase().replace(/é/g,‘e’).replace(/è/g,‘e’).replace(/ê/g,‘e’).replace(/à/g,‘a’).replace(/â/g,‘a’);
+var tl = (type + ’ ’ + (desc || ‘’)).toLowerCase().replace(/\u00e9/g,‘e’).replace(/\u00e8/g,‘e’).replace(/\u00ea/g,‘e’).replace(/\u00e0/g,‘a’).replace(/\u00e2/g,‘a’);
 var taux = getTaux(type, pays);
 var tvaAjustee = TVA_PAYS[pays] || 20;
 var majorationAD = 0;
