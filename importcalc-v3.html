@@ -12,6 +12,10 @@ h1{color:#ff3f3f;}
 .card{background:#0e1520;border:1px solid #1c2b40;border-radius:14px;padding:20px;margin-bottom:12px;}
 label{display:block;margin-bottom:5px;color:#8fa5c0;font-size:13px;}
 input,select,textarea{width:100%;background:#131d2e;border:1px solid #223350;border-radius:8px;padding:10px;color:#eef2ff;font-size:14px;box-sizing:border-box;margin-bottom:12px;}
+.pill-btn{display:block;width:100%;background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:14px;margin-bottom:10px;cursor:pointer;font-size:15px;font-weight:600;text-align:center;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(255,63,63,.2);transition:all .15s;}
+.pill-btn.active{border-color:#ff3f3f;background:rgba(255,63,63,.15);color:#ff3f3f;}
+.pill-btn-sm{display:inline-block;background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px 16px;margin-right:8px;margin-bottom:8px;cursor:pointer;font-size:14px;font-weight:600;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(255,63,63,.2);}
+.pill-btn-sm.active{border-color:#ff3f3f;background:rgba(255,63,63,.15);color:#ff3f3f;}
 button{background:#ff3f3f;color:#fff;border:none;border-radius:8px;padding:12px 20px;font-size:14px;cursor:pointer;width:100%;}
 .err{color:#ff7060;font-size:13px;display:none;margin-bottom:8px;}
 .step{display:flex;align-items:center;margin-bottom:16px;}
@@ -113,8 +117,8 @@ function step1() {
   var labels = ['France','Maroc','Congo-Brazzaville'];
   var pills = '';
   for (var i=0; i<pays.length; i++) {
-    var active = S.pays === pays[i] ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
-    pills += '<button type="button" onclick="S.pays=\'' + pays[i] + '\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;margin-right:8px;margin-bottom:8px;cursor:pointer;"'+active+'>'+labels[i]+'</button>';
+    var active = S.pays === pays[i] ? ' active' : '';
+    pills += '<button type="button" class="pill-btn' + active + '" onclick="S.pays=\'' + pays[i] + '\';render()">' + labels[i] + '</button>';
   }
   return '<div class="card">'
     + '<h3 style="margin-bottom:16px;">Etape 1 / 4 - Destination et Produit</h3>'
@@ -167,14 +171,14 @@ function goStep3() {
 }
 
 function step3() {
-  var aerienActive = S.transport.mode === 'aerien' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
-  var maritimeActive = S.transport.mode === 'maritime' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
+  var aerienActive = S.transport.mode === 'aerien' ? ' active' : '';
+  var maritimeActive = S.transport.mode === 'maritime' ? ' active' : '';
   return '<div class="card">'
     + '<h3 style="margin-bottom:16px;">Etape 3 / 4 - Transport</h3>'
     + '<label>Mode de transport</label>'
     + '<div style="margin-bottom:12px;">'
-    + '<button type="button" onclick="S.transport.mode=\'aerien\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;margin-right:8px;cursor:pointer;"'+aerienActive+'>Aerien / Express</button>'
-    + '<button type="button" onclick="S.transport.mode=\'maritime\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;cursor:pointer;"'+maritimeActive+'>Maritime</button>'
+    + '<button type="button" class="pill-btn-sm' + aerienActive + '" onclick="S.transport.mode='aerien';render()">Aerien / Express</button>'
+    + '<button type="button" class="pill-btn-sm' + maritimeActive + '" onclick="S.transport.mode='maritime';render()">Maritime</button>
     + '</div>'
     + '<label>Cout transport EUR *</label>'
     + '<input id="f-cout" type="number" placeholder="Ex: 280" value="'+S.transport.cout+'"/>'
@@ -195,21 +199,21 @@ function goStep4() {
 }
 
 function step4() {
-  var partActive = S.statut.achat === 'Particulier' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
-  var proActive = S.statut.achat === 'Professionnel' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
-  var persoActive = S.statut.usage === 'Usage personnel' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
-  var reventeActive = S.statut.usage === 'Revente' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
+  var partActive = S.statut.achat === 'Particulier' ? ' active' : '';
+  var proActive = S.statut.achat === 'Professionnel' ? ' active' : '';
+  var persoActive = S.statut.usage === 'Usage personnel' ? ' active' : '';
+  var reventeActive = S.statut.usage === 'Revente' ? ' active' : '';
   return '<div class="card">'
     + '<h3 style="margin-bottom:16px;">Etape 4 / 4 - Statut</h3>'
     + '<label>Mode achat</label>'
     + '<div style="margin-bottom:12px;">'
-    + '<button type="button" onclick="S.statut.achat=\'Particulier\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;margin-right:8px;cursor:pointer;"'+partActive+'>Particulier</button>'
-    + '<button type="button" onclick="S.statut.achat=\'Professionnel\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;cursor:pointer;"'+proActive+'>Professionnel</button>'
+    + '<button type="button" class="pill-btn-sm' + partActive + '" onclick="S.statut.achat='Particulier';render()">Particulier</button>'
+    + '<button type="button" class="pill-btn-sm' + proActive + '" onclick="S.statut.achat='Professionnel';render()">Professionnel</button>
     + '</div>'
     + '<label>Usage prevu</label>'
     + '<div style="margin-bottom:16px;">'
-    + '<button type="button" onclick="S.statut.usage=\'Usage personnel\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;margin-right:8px;cursor:pointer;"'+persoActive+'>Usage perso</button>'
-    + '<button type="button" onclick="S.statut.usage=\'Revente\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;cursor:pointer;"'+reventeActive+'>Revente</button>'
+    + '<button type="button" class="pill-btn-sm' + persoActive + '" onclick="S.statut.usage='Usage personnel';render()">Usage perso</button>'
+    + '<button type="button" class="pill-btn-sm' + reventeActive + '" onclick="S.statut.usage='Revente';render()">Revente</button>
     + '</div>'
     + '<button onclick="S.step=5;render()">Lancer le calcul</button>'
     + '<button class="btn-sec" onclick="S.step=3;render()">Retour</button>'
