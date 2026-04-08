@@ -4,1421 +4,309 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>ImportCalc V3 — Chine → Monde</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<title>ImportCalc V3</title>
 <style>
-:root{
-  --bg:#070b12;--s1:#0e1520;--s2:#131d2e;--s3:#182338;
-  --border:#1c2b40;--border2:#223350;
-  --text:#eef2ff;--muted:#6e849e;--muted2:#8fa5c0;
-  --red:#ff3f3f;--red2:#ff6628;
-  --green:#00dfa0;--green2:#00c48c;
-  --blue:#4a9aff;--blue2:#78b8ff;
-  --amber:#f5a020;--amber2:#fbbf24;
-  --r:18px;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse 65% 40% at 5% 0%,rgba(255,63,63,.07) 0%,transparent 55%),
-  radial-gradient(ellipse 45% 35% at 95% 100%,rgba(0,223,160,.05) 0%,transparent 55%);}
-.wrap{max-width:700px;margin:0 auto;padding:20px 14px 80px;position:relative;z-index:1;}
-.header{text-align:center;padding:26px 0 32px;}
-.logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px;}
-.logo-icon{width:44px;height:44px;border-radius:13px;font-size:20px;background:linear-gradient(135deg,var(--red2),var(--red));display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(255,63,63,.28);}
-.logo-name{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.02em;}
-.logo-name span{color:var(--red);}
-.logo-v{font-size:11px;background:rgba(255,63,63,.14);color:var(--red);border:1px solid rgba(255,63,63,.2);border-radius:6px;padding:2px 7px;font-weight:700;}
-.header h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(23px,5vw,35px);line-height:1.1;letter-spacing:-.03em;margin-bottom:9px;}
-.header h1 em{font-style:normal;color:var(--red);}
-.header p{color:var(--muted2);font-size:13.5px;line-height:1.6;max-width:430px;margin:0 auto 14px;}
-.badges{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;}
-.badge{font-size:10.5px;font-weight:500;padding:5px 10px;border-radius:999px;border:1px solid var(--border2);color:var(--muted2);background:rgba(255,255,255,.02);}
-.badge.live{border-color:rgba(0,223,160,.2);color:var(--green2);background:rgba(0,223,160,.04);}
-.badge.pro{border-color:rgba(74,154,255,.2);color:var(--blue2);background:rgba(74,154,255,.04);}
-.progress-wrap{margin-bottom:22px;}
-.progress-steps{display:flex;align-items:center;margin-bottom:9px;}
-.sdot{width:29px;height:29px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;color:var(--muted);transition:.3s;flex-shrink:0;background:var(--s1);}
-.sdot.active{border-color:var(--red);color:var(--red);box-shadow:0 0 0 4px rgba(255,63,63,.1);}
-.sdot.done{border-color:var(--green);background:var(--green);color:var(--bg);}
-.sline{flex:1;height:2px;background:var(--border2);transition:.4s;}
-.sline.done{background:var(--green);}
-.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:500;}
-.progress-label .cur{color:var(--text);font-weight:600;}
-.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:13px;animation:fadeUp .3s ease both;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:none}}
-.card-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
-.card h2{font-family:'Syne',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.02em;margin-bottom:4px;}
-.card .sub{color:var(--muted2);font-size:13px;line-height:1.55;margin-bottom:16px;}
-.grid{display:grid;gap:12px;}
-.grid.two{grid-template-columns:1fr 1fr;}
-@media(max-width:500px){.grid.two{grid-template-columns:1fr;}}
-.field{display:flex;flex-direction:column;gap:5px;}
-.lbl{font-size:12.5px;font-weight:500;color:var(--muted2);display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
-.req{font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--green);background:rgba(0,223,160,.08);border:1px solid rgba(0,223,160,.14);padding:2px 7px;border-radius:999px;}
-.opt{font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--blue2);background:rgba(74,154,255,.07);border:1px solid rgba(74,154,255,.13);padding:2px 7px;border-radius:999px;}
-.helper{font-size:11px;color:var(--muted);line-height:1.4;}
-.input-wrap{position:relative;}
-.input-wrap input,.input-wrap textarea{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:11px;padding:12px 42px 12px 12px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:.2s;}
-.input-wrap input:focus,.input-wrap textarea:focus{border-color:rgba(255,63,63,.35);box-shadow:0 0 0 3px rgba(255,63,63,.07);}
-.input-wrap input::placeholder,.input-wrap textarea::placeholder{color:var(--muted);}
-.input-wrap textarea{min-height:82px;resize:vertical;}
-.mic-btn{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;border:1px solid var(--border2);background:var(--s3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:.2s;}
-.mic-btn:hover{border-color:var(--red);}
-.mic-btn.on{border-color:var(--red);background:rgba(255,63,63,.15);animation:mpulse 1s ease-in-out infinite;}
-.ta-mic{top:12px;transform:none;}
-@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,63,63,.4)}50%{box-shadow:0 0 0 6px rgba(255,63,63,0)}}
-input.bare,select.bare,textarea.bare{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:11px;padding:12px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:.2s;appearance:none;-webkit-appearance:none;}
-select.bare{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236e849e' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-input.bare:focus,select.bare:focus{border-color:rgba(255,63,63,.35);box-shadow:0 0 0 3px rgba(255,63,63,.07);}
-input.bare::placeholder{color:var(--muted);}
-.mode-tabs{display:flex;gap:8px;margin-bottom:16px;}
-.mode-tab{flex:1;padding:12px;border:2px solid var(--border2);border-radius:12px;background:var(--s2);font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;color:var(--muted2);}
-.mode-tab.active{border-color:var(--red);background:rgba(255,63,63,.08);color:var(--text);}
-.notice{background:rgba(245,160,32,.05);border:1px solid rgba(245,160,32,.12);border-radius:10px;padding:10px 12px;font-size:12px;color:#c09030;line-height:1.5;margin-top:11px;display:flex;gap:8px;align-items:flex-start;}
-.ni{font-size:14px;flex-shrink:0;}
-.err{background:rgba(255,63,63,.07);border:1px solid rgba(255,63,63,.2);border-radius:9px;padding:11px 12px;font-size:13px;color:#ff7060;margin-top:10px;display:none;}
-.err.show{display:block;}
-.inco-info{background:rgba(74,154,255,.06);border:1px solid rgba(74,154,255,.15);border-radius:9px;padding:9px 12px;font-size:12px;color:var(--blue2);margin-top:7px;display:none;line-height:1.5;}
-.inco-info.show{display:block;}
-.actions{display:flex;gap:9px;margin-top:16px;}
-.btn{border:none;border-radius:10px;padding:13px 17px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:7px;}
-.btn-primary{flex:1;background:linear-gradient(135deg,var(--red2),var(--red));color:#fff;box-shadow:0 8px 20px rgba(255,63,63,.2);justify-content:center;}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(255,63,63,.3);}
-.btn-sec{background:var(--s2);border:1px solid var(--border2);color:var(--muted2);}
-.btn-sec:hover{border-color:var(--border);color:var(--text);}
-.btn-green{flex:1;background:linear-gradient(135deg,var(--green2),var(--green));color:var(--bg);font-weight:700;justify-content:center;}
-.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--muted2);flex:1;}
-.pills{display:flex;gap:8px;flex-wrap:wrap;}
-.pill{padding:10px 15px;border-radius:10px;border:1.5px solid var(--border2);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;background:var(--s2);color:var(--muted2);}
-.pill.active{border-color:var(--red);background:rgba(255,63,63,.08);color:var(--text);}
-.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.check{border:1px solid var(--border2);border-radius:10px;padding:10px 12px;background:var(--s2);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;}
-.check.checked{border-color:rgba(255,63,63,.3);background:rgba(255,63,63,.05);}
-.cbox{width:16px;height:16px;border-radius:5px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s;}
-.check.checked .cbox{background:var(--red);border-color:var(--red);}
-.check.checked .cbox::after{content:'checkmark';color:#fff;font-size:9px;font-weight:700;}
-.loading-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:42px 20px;text-align:center;animation:fadeUp .3s ease both;}
-.orb{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--red2),var(--red));margin:0 auto 16px;animation:opulse 1.6s ease-in-out infinite;}
-@keyframes opulse{0%{box-shadow:0 0 0 0 rgba(255,63,63,.4)}50%{box-shadow:0 0 0 20px rgba(255,63,63,0)}100%{box-shadow:0 0 0 0 rgba(255,63,63,0)}}
-.lt{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;margin-bottom:6px;}
-.ls{color:var(--muted2);font-size:13px;line-height:1.5;margin-bottom:18px;}
-.lsteps{display:flex;flex-direction:column;gap:6px;text-align:left;}
-.lstep{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;background:var(--s2);font-size:12.5px;color:var(--muted);transition:.35s;}
-.lstep.active{color:var(--text);background:rgba(255,63,63,.06);border-left:2px solid var(--red);padding-left:10px;}
-.lstep.done{color:var(--green2);}
-.lspinner{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);border-top-color:var(--red);animation:spin .7s linear infinite;flex-shrink:0;}
+body{background:#070b12;color:#eef2ff;font-family:sans-serif;margin:0;padding:20px;}
+h1{color:#ff3f3f;}
+#root{margin-top:20px;}
+.card{background:#0e1520;border:1px solid #1c2b40;border-radius:14px;padding:20px;margin-bottom:12px;}
+label{display:block;margin-bottom:5px;color:#8fa5c0;font-size:13px;}
+input,select,textarea{width:100%;background:#131d2e;border:1px solid #223350;border-radius:8px;padding:10px;color:#eef2ff;font-size:14px;box-sizing:border-box;margin-bottom:12px;}
+button{background:#ff3f3f;color:#fff;border:none;border-radius:8px;padding:12px 20px;font-size:14px;cursor:pointer;width:100%;}
+.err{color:#ff7060;font-size:13px;display:none;margin-bottom:8px;}
+.step{display:flex;align-items:center;margin-bottom:16px;}
+.dot{width:28px;height:28px;border-radius:50%;border:2px solid #223350;display:flex;align-items:center;justify-content:center;font-size:11px;color:#6e849e;margin-right:8px;flex-shrink:0;}
+.dot.active{border-color:#ff3f3f;color:#ff3f3f;}
+.dot.done{background:#00dfa0;border-color:#00dfa0;color:#070b12;}
+.line{flex:1;height:2px;background:#223350;margin-right:8px;}
+.line.done{background:#00dfa0;}
+.result-total{font-size:36px;font-weight:800;text-align:center;margin:16px 0;}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1c2b40;font-size:13px;}
+.row:last-child{border:none;}
+.row .val{font-weight:700;}
+.badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;margin-bottom:12px;}
+.badge-ok{background:rgba(0,223,160,.1);color:#00dfa0;border:1px solid rgba(0,223,160,.2);}
+.badge-warn{background:rgba(245,160,32,.1);color:#fbbf24;border:1px solid rgba(245,160,32,.2);}
+.badge-danger{background:rgba(255,63,63,.1);color:#ff8070;border:1px solid rgba(255,63,63,.2);}
+.alert{padding:10px 12px;border-radius:8px;font-size:12px;margin-bottom:8px;line-height:1.5;}
+.alert-info{background:rgba(74,154,255,.06);border:1px solid rgba(74,154,255,.15);color:#78b8ff;}
+.alert-warn{background:rgba(245,160,32,.06);border:1px solid rgba(245,160,32,.15);color:#fbbf24;}
+.alert-danger{background:rgba(255,63,63,.06);border:1px solid rgba(255,63,63,.15);color:#ff8070;}
+.ai-block{background:rgba(255,63,63,.04);border:1px solid rgba(255,63,63,.2);border-radius:14px;padding:16px;margin-bottom:12px;}
+.ai-loading{text-align:center;padding:16px;color:#8fa5c0;}
+.spinner{display:inline-block;width:24px;height:24px;border:3px solid rgba(255,63,63,.2);border-top-color:#ff3f3f;border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.lstep.done .lspinner{border:none;display:flex;align-items:center;justify-content:center;color:var(--green);font-size:10px;font-weight:700;}
-.src-tag{font-size:9.5px;padding:2px 7px;border-radius:999px;font-weight:700;letter-spacing:.04em;margin-left:auto;flex-shrink:0;}
-.src-taric{background:rgba(74,154,255,.1);color:var(--blue2);border:1px solid rgba(74,154,255,.15);}
-.src-ai{background:rgba(255,63,63,.1);color:var(--red);border:1px solid rgba(255,63,63,.15);}
-.result-hero{background:linear-gradient(135deg,#09180f,#071224);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:12px;text-align:center;animation:fadeUp .3s ease both;}
-.total-lbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);margin-bottom:4px;}
-.total-amt{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(32px,8vw,48px);letter-spacing:-.04em;background:linear-gradient(135deg,#fff,var(--muted2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.total-sub{color:var(--muted);font-size:12px;margin-top:4px;}
-.rec-badge{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:9px 15px;border-radius:9px;font-size:13px;font-weight:700;}
-.rb-warn{background:rgba(245,160,32,.08);border:1px solid rgba(245,160,32,.2);color:var(--amber2);}
-.rb-danger{background:rgba(255,63,63,.08);border:1px solid rgba(255,63,63,.2);color:#ff8070;}
-.rb-ok{background:rgba(0,223,160,.08);border:1px solid rgba(0,223,160,.2);color:var(--green);}
-.rsec{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:17px;margin-bottom:10px;animation:fadeUp .3s ease both;}
-.rsec h3{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:13px;display:flex;align-items:center;gap:7px;}
-.sico{width:25px;height:25px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
-.ic-cost{background:rgba(255,63,63,.1);}
-.ic-norms{background:rgba(245,160,32,.1);}
-.ic-rec{background:rgba(0,223,160,.1);}
-.ic-alert{background:rgba(245,160,32,.1);}
-.ic-inco{background:rgba(74,154,255,.1);}
-.ctable{display:flex;flex-direction:column;}
-.crow{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border);gap:10px;}
-.crow:last-child{border-bottom:none;}
-.cleft{display:flex;flex-direction:column;gap:2px;}
-.clabel{font-size:13px;color:var(--muted2);}
-.cexpl{font-size:11px;color:var(--muted);line-height:1.35;}
-.cright{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0;}
-.cval{font-size:14px;font-weight:700;color:var(--text);}
-.cpct{font-size:11px;color:var(--muted);font-style:italic;}
-.crow.total-row .clabel{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--text);}
-.crow.total-row .cval{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--red);}
-.aitem{border-radius:9px;padding:10px 12px;font-size:13px;line-height:1.55;margin-bottom:7px;display:flex;gap:9px;align-items:flex-start;}
-.a-warn{background:rgba(245,160,32,.06);border:1px solid rgba(245,160,32,.14);color:#c09030;}
-.a-ok{background:rgba(0,223,160,.06);border:1px solid rgba(0,223,160,.14);color:var(--green2);}
-.a-danger{background:rgba(255,63,63,.06);border:1px solid rgba(255,63,63,.14);color:#ff7a6a;}
-.a-info{background:rgba(74,154,255,.06);border:1px solid rgba(74,154,255,.14);color:var(--blue2);}
-.aico{font-size:14px;flex-shrink:0;margin-top:1px;}
-.norm-item{display:flex;align-items:flex-start;gap:9px;padding:10px 11px;background:var(--s2);border-radius:9px;margin-bottom:6px;font-size:12.5px;}
-.ndot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;}
-.nd-req{background:var(--red);}
-.nd-rec{background:var(--amber);}
-.nd-opt{background:var(--green);}
-.ntitle{font-weight:600;color:var(--text);margin-bottom:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.ntag{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:999px;}
-.ntag-req{background:rgba(255,63,63,.1);color:var(--red);border:1px solid rgba(255,63,63,.15);}
-.ntag-rec{background:rgba(245,160,32,.1);color:var(--amber2);border:1px solid rgba(245,160,32,.15);}
-.ntag-opt{background:rgba(0,223,160,.1);color:var(--green);border:1px solid rgba(0,223,160,.15);}
-.ndesc{font-size:11.5px;color:var(--muted2);line-height:1.4;}
-.rv{display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:9px;margin-bottom:11px;font-size:13.5px;font-weight:700;}
-.rv-danger{background:rgba(255,63,63,.08);border:1px solid rgba(255,63,63,.2);color:#ff8070;}
-.rv-warn{background:rgba(245,160,32,.08);border:1px solid rgba(245,160,32,.2);color:var(--amber2);}
-.rv-ok{background:rgba(0,223,160,.08);border:1px solid rgba(0,223,160,.2);color:var(--green);}
-.rec-box{background:var(--s2);border-radius:10px;padding:14px;font-size:13.5px;line-height:1.65;color:var(--muted2);}
-.rec-box strong{color:var(--text);}
-.src-row{display:flex;align-items:center;gap:7px;margin-top:11px;padding:8px 11px;background:var(--s2);border-radius:8px;font-size:11.5px;color:var(--muted);}
-.srdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.srd-green{background:var(--green);}
-.srd-blue{background:var(--blue);}
-.srd-amber{background:var(--amber);}
-.srdate{margin-left:auto;font-size:10.5px;font-style:italic;}
-.disclaimer{text-align:center;color:var(--muted);font-size:11px;line-height:1.5;padding:13px;border-top:1px solid var(--border);margin-top:7px;}
-.inco-block{background:var(--s2);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-bottom:10px;}
-.inco-block-title{font-size:12px;font-weight:700;color:var(--blue2);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-.inco-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
-.inco-row:last-child{border-bottom:none;}
-.inco-who{width:80px;flex-shrink:0;font-weight:600;font-size:11px;padding:3px 7px;border-radius:5px;text-align:center;}
-.iw-four{background:rgba(0,223,160,.08);color:var(--green2);border:1px solid rgba(0,223,160,.15);}
-.iw-vous{background:rgba(255,63,63,.08);color:#ff8070;border:1px solid rgba(255,63,63,.15);}
-.inco-desc{color:var(--muted2);flex:1;line-height:1.4;}
-.poids-box{background:rgba(74,154,255,.04);border:1px solid rgba(74,154,255,.15);border-radius:10px;padding:12px;margin-top:10px;font-size:12px;color:var(--blue2);}
-.prec-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;margin-bottom:10px;}
-.prec-haute{background:rgba(0,223,160,.1);color:var(--green);border:1px solid rgba(0,223,160,.2);}
-.prec-moy{background:rgba(245,160,32,.1);color:var(--amber2);border:1px solid rgba(245,160,32,.2);}
-.prec-base{background:rgba(110,132,158,.1);color:var(--muted2);border:1px solid rgba(110,132,158,.2);}
-a.src-link{color:var(--blue2);text-decoration:underline;font-size:11px;}
-
-/* ═══════════════════════════════════════════
-BLOC ANALYSE CLAUDE AI — Styles dédiés
-═══════════════════════════════════════════ */
-.ai-block{
-background:linear-gradient(135deg,rgba(255,63,63,.04),rgba(74,154,255,.04));
-border:1px solid rgba(255,63,63,.2);
-border-radius:var(–r);
-padding:20px;
-margin-bottom:13px;
-animation:fadeUp .4s ease both;
-}
-.ai-block-header{
-display:flex;align-items:center;gap:10px;margin-bottom:14px;
-}
-.ai-orb{
-width:34px;height:34px;border-radius:10px;flex-shrink:0;
-background:linear-gradient(135deg,var(–red2),var(–red));
-display:flex;align-items:center;justify-content:center;
-font-size:16px;
-box-shadow:0 4px 14px rgba(255,63,63,.25);
-}
-.ai-block-header h3{
-font-family:‘Syne’,sans-serif;font-weight:700;font-size:15px;
-flex:1;
-}
-.ai-block-header .ai-badge{
-font-size:9.5px;font-weight:700;letter-spacing:.05em;
-padding:3px 8px;border-radius:999px;
-background:rgba(255,63,63,.1);color:var(–red);
-border:1px solid rgba(255,63,63,.2);
-}
-
-/* État chargement */
-.ai-loading{
-display:flex;flex-direction:column;align-items:center;gap:10px;
-padding:16px 0;text-align:center;
-}
-.ai-spinner-wrap{
-width:38px;height:38px;border-radius:50%;
-border:3px solid rgba(255,63,63,.15);
-border-top-color:var(–red);
-animation:spin .8s linear infinite;
-}
-.ai-loading-text{font-size:13px;color:var(–muted2);}
-.ai-loading-sub{font-size:11px;color:var(–muted);}
-
-/* Risque badge */
-.ai-risque{
-display:inline-flex;align-items:center;gap:6px;
-padding:6px 12px;border-radius:8px;
-font-size:12px;font-weight:700;
-margin-bottom:12px;
-}
-.ai-risque-faible{background:rgba(0,223,160,.1);color:var(–green);border:1px solid rgba(0,223,160,.2);}
-.ai-risque-moyen{background:rgba(245,160,32,.1);color:var(–amber2);border:1px solid rgba(245,160,32,.2);}
-.ai-risque-eleve{background:rgba(255,63,63,.1);color:#ff8070;border:1px solid rgba(255,63,63,.2);}
-
-/* Résumé */
-.ai-resume{
-font-size:14px;font-weight:600;color:var(–text);
-line-height:1.55;margin-bottom:13px;
-padding:12px 14px;
-background:rgba(255,255,255,.03);
-border-radius:10px;
-border-left:3px solid var(–red);
-}
-
-/* Points clés */
-.ai-points{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
-.ai-point{
-display:flex;align-items:flex-start;gap:8px;
-font-size:13px;color:var(–muted2);line-height:1.5;
-padding:8px 10px;
-background:var(–s2);border-radius:8px;
-}
-.ai-dot{
-width:6px;height:6px;border-radius:50%;
-background:var(–red);flex-shrink:0;margin-top:6px;
-}
-
-/* Conseil principal */
-.ai-conseil{
-background:rgba(74,154,255,.06);
-border:1px solid rgba(74,154,255,.15);
-border-radius:10px;padding:12px 14px;
-font-size:13px;color:var(–blue2);
-line-height:1.55;margin-bottom:10px;
-display:flex;gap:9px;align-items:flex-start;
-}
-.ai-conseil-ico{font-size:15px;flex-shrink:0;}
-
-/* Optimisation */
-.ai-opti{
-background:rgba(0,223,160,.05);
-border:1px solid rgba(0,223,160,.13);
-border-radius:10px;padding:10px 13px;
-font-size:12.5px;color:var(–green2);
-line-height:1.5;
-display:flex;gap:8px;align-items:flex-start;
-}
-.ai-opti-ico{font-size:14px;flex-shrink:0;}
-
-/* Alertes Claude */
-.ai-alert{
-background:rgba(255,63,63,.05);
-border:1px solid rgba(255,63,63,.15);
-border-radius:8px;padding:8px 11px;
-font-size:12.5px;color:#ff8070;
-margin-bottom:6px;
-display:flex;gap:7px;align-items:flex-start;
-line-height:1.5;
-}
-
-/* Erreur */
-.ai-error{
-background:rgba(255,63,63,.06);
-border:1px solid rgba(255,63,63,.2);
-border-radius:9px;padding:12px;
-font-size:12.5px;color:#ff8070;
-text-align:center;
-}
-.ai-retry{
-margin-top:10px;
-background:rgba(255,63,63,.1);border:1px solid rgba(255,63,63,.25);
-color:var(–red);border-radius:8px;
-padding:8px 16px;font-size:12.5px;font-weight:600;
-cursor:pointer;font-family:‘DM Sans’,sans-serif;
-transition:.2s;
-}
-.ai-retry:hover{background:rgba(255,63,63,.18);}
-
-/* Footer AI */
-.ai-footer{
-margin-top:12px;padding-top:10px;
-border-top:1px solid var(–border);
-display:flex;align-items:center;gap:6px;
-font-size:10.5px;color:var(–muted);
-}
-.ai-footer-dot{
-width:5px;height:5px;border-radius:50%;
-background:var(–green);animation:blink 2s ease-in-out infinite;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-sec{background:#131d2e;border:1px solid #223350;color:#8fa5c0;margin-top:8px;}
 </style>
-
 </head>
 <body>
-<div class="wrap">
-<div class="header">
-  <div class="logo">
-    <div class="logo-icon">🚢</div>
-    <div class="logo-name">Import<span>Calc</span></div>
-    <span class="logo-v">V3</span>
-  </div>
-  <h1>Chine <em>&#8594;</em> Monde</h1>
-  <p>Simulateur import Chine vers France, Maroc ou Congo-Brazzaville. Aerien et maritime. Calcul complet avec incoterms, poids taxable et normes.</p>
-  <div class="badges">
-    <span class="badge live">&#9889; TARIC temps reel (France)</span>
-    <span class="badge pro">&#127758; 3 pays</span>
-    <span class="badge">&#9992;&#65039; Aerien</span>
-    <span class="badge">&#128674; Maritime</span>
-    <span class="badge">&#127908; Vocal</span>
-    <span class="badge live">🤖 Analyse Claude AI</span>
-  </div>
-</div>
-<div class="progress-wrap" id="progressWrap">
-  <div class="progress-steps">
-    <div class="sdot active" id="dot1">1</div><div class="sline" id="ln1"></div>
-    <div class="sdot" id="dot2">2</div><div class="sline" id="ln2"></div>
-    <div class="sdot" id="dot3">3</div><div class="sline" id="ln3"></div>
-    <div class="sdot" id="dot4">4</div>
-  </div>
-  <div class="progress-label">
-    <span id="stepLbl" class="cur">Etape 1 / 4 - Destination &amp; Produit</span>
-    <span id="pctLbl">25%</span>
-  </div>
+<h1>ImportCalc V3 - Chine vers Monde</h1>
+<div id="steps" style="display:flex;align-items:center;margin-bottom:20px;">
+  <div class="dot active" id="d1">1</div><div class="line" id="l1"></div>
+  <div class="dot" id="d2">2</div><div class="line" id="l2"></div>
+  <div class="dot" id="d3">3</div><div class="line" id="l3"></div>
+  <div class="dot" id="d4">4</div>
 </div>
 <div id="root"></div>
-</div>
-<script>
-try {
-console.log("SCRIPT START");
-// ═══════════════════════════════════════════════════════
-// URL DE LA FONCTION NETLIFY — À CHANGER SI BESOIN
-// Format : https://[votre-site].netlify.app/.netlify/functions/claude
-// ═══════════════════════════════════════════════════════
-var NETLIFY_FUNCTION_URL = '/.netlify/functions/claude';
 
+<script>
 var S = {
-step: 1,
-pays: ‘france’,
-produit: { type: ‘’, desc: ‘’, hs: ‘’, taric: ‘’, taricRate: null, fabrication: ‘’ },
-valeur: { qte: ‘’, total: ‘’, devise: ‘EUR’, poids: ‘’, volume: ‘’ },
-transport: { mode: ‘aerien’, cout: ‘’, transporteur: ‘Non precis’, incoterm: ‘CIF’, livraison: ‘Domicile’, compagnie: ‘Non precise’, conteneur: ‘LCL’, port: ‘’, transitaire: ‘Non su’ },
-statut: { achat: ‘Particulier’, usage: ‘Usage personnel’, sensibles: [], remarques: ‘’ },
-taricOptions: [],
-result: null
+  step: 1,
+  pays: 'france',
+  produit: {type:'', desc:'', hs:''},
+  valeur: {qte:'', total:'', devise:'EUR', poids:'', volume:''},
+  transport: {mode:'aerien', cout:'', incoterm:'CIF', transporteur:'Non precis'},
+  statut: {achat:'Particulier', usage:'Usage personnel'}
 };
 
-var CONV = { EUR: 1, USD: 0.92, CNY: 0.128 };
+var CONV = {EUR:1, USD:0.92, CNY:0.128};
+var TVA = {france:20, maroc:20, congo:18.9};
 
-var TAUX_FR = { ‘textile’: 12, ‘vetement’: 12, ‘veste’: 12, ‘pantalon’: 12, ‘chemise’: 12, ‘robe’: 12, ‘chaussure’: 17, ‘sac’: 3.7, ‘electronique’: 0, ‘ordinateur’: 0, ‘telephone’: 0, ‘smartphone’: 0, ‘tablette’: 0, ‘casque’: 0, ‘cable’: 0, ‘velo’: 15, ‘trottinette’: 15, ‘jouet’: 4.7, ‘meuble’: 5.6, ‘luminaire’: 4.7, ‘cosmetique’: 6.5, ‘alimentaire’: 12, ‘machine’: 2.7, ‘outil’: 2.7, ‘sport’: 4.7, ‘default’: 5 };
-var TAUX_MA = { ‘textile’: 25, ‘vetement’: 25, ‘veste’: 25, ‘pantalon’: 25, ‘chaussure’: 40, ‘sac’: 17.5, ‘electronique’: 2.5, ‘ordinateur’: 2.5, ‘telephone’: 2.5, ‘smartphone’: 2.5, ‘tablette’: 2.5, ‘velo’: 25, ‘trottinette’: 25, ‘jouet’: 17.5, ‘meuble’: 40, ‘luminaire’: 25, ‘cosmetique’: 25, ‘alimentaire’: 25, ‘machine’: 10, ‘outil’: 10, ‘sport’: 17.5, ‘default’: 17.5 };
-var TAUX_CG = { ‘electronique’: 10, ‘ordinateur’: 10, ‘telephone’: 10, ‘smartphone’: 10, ‘tablette’: 10, ‘machine’: 5, ‘outil’: 5, ‘textile’: 20, ‘vetement’: 20, ‘veste’: 20, ‘chaussure’: 30, ‘sac’: 20, ‘luminaire’: 20, ‘meuble’: 20, ‘jouet’: 20, ‘cosmetique’: 30, ‘alimentaire’: 20, ‘velo’: 20, ‘trottinette’: 20, ‘sport’: 20, ‘default’: 20 };
-var TVA_PAYS = { france: 20, maroc: 20, congo: 18.9 };
-
-function detecterAlertesSpeciales(type, desc, pays) {
-var alertes = [];
-var tl = (type + ’ ’ + (desc || ‘’)).toLowerCase()
-.replace(/\u00e9/g,‘e’).replace(/\u00e8/g,‘e’).replace(/\u00ea/g,‘e’)
-.replace(/\u00e0/g,‘a’).replace(/\u00e2/g,‘a’).replace(/\u00ee/g,‘i’)
-.replace(/\u00f4/g,‘o’).replace(/\u00fb/g,‘u’).replace(/\u00e7/g,‘c’);
-var isVoitureElec = (tl.indexOf(‘voiture elect’) >= 0 || tl.indexOf(‘vehicule elect’) >= 0 || tl.indexOf(‘auto elect’) >= 0 || tl.indexOf(‘automobile elect’) >= 0 || (tl.indexOf(‘voiture’) >= 0 && tl.indexOf(‘elect’) >= 0) || (tl.indexOf(‘auto’) >= 0 && tl.indexOf(‘elect’) >= 0));
-var isVeloElec = (tl.indexOf(‘velo elect’) >= 0 || tl.indexOf(‘vae’) >= 0 || tl.indexOf(‘e-bike’) >= 0 || tl.indexOf(‘ebike’) >= 0);
-var isTrott = (tl.indexOf(‘trottinette’) >= 0);
-var isMotoElec = (tl.indexOf(‘moto elect’) >= 0 || tl.indexOf(‘scooter elect’) >= 0);
-var isVelo = (tl.indexOf(‘velo’) >= 0 && !isVeloElec);
-var isPanneauSolaire = (tl.indexOf(‘panneau solaire’) >= 0 || tl.indexOf(‘panneau photo’) >= 0 || tl.indexOf(‘solaire’) >= 0);
-var isAcier = (tl.indexOf(‘acier’) >= 0 || tl.indexOf(‘steel’) >= 0 || tl.indexOf(‘fer’) >= 0 || tl.indexOf(‘metal’) >= 0);
-var isCeramique = (tl.indexOf(‘ceramique’) >= 0 || tl.indexOf(‘porcelaine’) >= 0 || tl.indexOf(‘faience’) >= 0);
-var isContreplaque = (tl.indexOf(‘contreplaque’) >= 0 || tl.indexOf(‘bois dur’) >= 0 || tl.indexOf(‘parquet’) >= 0 || tl.indexOf(‘plancher’) >= 0);
-var isBougie = (tl.indexOf(‘bougie’) >= 0 || tl.indexOf(‘chandelle’) >= 0);
-if (pays === ‘france’) {
-if (isVoitureElec) { alertes.push({ type: ‘danger’, cat: ‘antidumping’, msg: ‘DROITS COMPENSATEURS UE sur VE chinois : +35.3% depuis octobre 2024.’ }); }
-if (isVeloElec || isVelo) { alertes.push({ type: ‘warn’, cat: ‘antidumping’, msg: ‘Velos : droits antidumping UE possibles (15% a 48.5%). Verifiez sur taric.europa.eu.’ }); }
-if (isPanneauSolaire) { alertes.push({ type: ‘warn’, cat: ‘antidumping’, msg: ‘Panneaux solaires : droits antidumping UE applicables.’ }); }
-if (isAcier) { alertes.push({ type: ‘warn’, cat: ‘antidumping’, msg: ‘Produits en acier : mesures antidumping UE. Taux jusqu'a 70%+.’ }); }
-if (isCeramique) { alertes.push({ type: ‘warn’, cat: ‘antidumping’, msg: ‘Ceramique : droits antidumping UE en vigueur.’ }); }
-if (isContreplaque) { alertes.push({ type: ‘danger’, cat: ‘antidumping’, msg: ‘Contreplaque/parquet : droits antidumping provisoires UE 25% a 62.4%.’ }); }
-if (isBougie) { alertes.push({ type: ‘warn’, cat: ‘antidumping’, msg: ‘Bougies : droits antidumping provisoires UE jusqu'a 70.9%.’ }); }
-}
-if (pays === ‘maroc’) {
-if (isVoitureElec) { alertes.push({ type: ‘ok’, cat: ‘exoneration’, msg: ‘EXONERATION MAROC - Voiture 100% electrique : droits 2.5% + TVA 0%.’ }); }
-if (isVeloElec) { alertes.push({ type: ‘info’, cat: ‘info’, msg: ‘Velo electrique Maroc : taux standard 25% + TVA 20%.’ }); }
-if (isPanneauSolaire) { alertes.push({ type: ‘info’, cat: ‘info’, msg: ‘Panneaux solaires : taux reduits possibles. Verifiez douane.gov.ma (ADIL).’ }); }
-}
-if (pays === ‘congo’) {
-if (isVoitureElec || isVeloElec || isMotoElec) { alertes.push({ type: ‘info’, cat: ‘info’, msg: ‘Vehicule electrique Congo : pas d'exoneration connue. Taux CEMAC standard.’ }); }
-}
-return alertes;
-}
+var TAUX = {
+  france: {textile:12,vetement:12,veste:12,chaussure:17,electronique:0,ordinateur:0,telephone:0,smartphone:0,velo:15,trottinette:15,jouet:4.7,meuble:5.6,cosmetique:6.5,alimentaire:12,machine:2.7,sport:4.7,def:5},
+  maroc:  {textile:25,vetement:25,veste:25,chaussure:40,electronique:2.5,ordinateur:2.5,telephone:2.5,smartphone:2.5,velo:25,trottinette:25,jouet:17.5,meuble:40,cosmetique:25,alimentaire:25,machine:10,sport:17.5,def:17.5},
+  congo:  {textile:20,vetement:20,veste:20,chaussure:30,electronique:10,ordinateur:10,telephone:10,smartphone:10,velo:20,trottinette:20,jouet:20,meuble:20,cosmetique:30,alimentaire:20,machine:5,sport:20,def:20}
+};
 
 function getTaux(type, pays) {
-var l = type.toLowerCase().replace(/[\u00e9e]/g, ‘e’).replace(/[\u00e0\u00e2]/g, ‘a’);
-var rates = pays === ‘france’ ? TAUX_FR : pays === ‘maroc’ ? TAUX_MA : TAUX_CG;
-var keys = Object.keys(rates);
-for (var i = 0; i < keys.length; i++) {
-if (keys[i] !== ‘default’ && l.indexOf(keys[i]) >= 0) return rates[keys[i]];
-}
-return rates[‘default’];
-}
-
-function getTauxAjuste(type, desc, pays) {
-var tl = (type + ’ ’ + (desc || ‘’)).toLowerCase().replace(/\u00e9/g,‘e’).replace(/\u00e8/g,‘e’).replace(/\u00ea/g,‘e’).replace(/\u00e0/g,‘a’).replace(/\u00e2/g,‘a’);
-var taux = getTaux(type, pays);
-var tvaAjustee = TVA_PAYS[pays] || 20;
-var majorationAD = 0;
-if (pays === ‘maroc’) {
-var isVoitureElec = tl.indexOf(‘voiture elect’) >= 0 || tl.indexOf(‘vehicule elect’) >= 0 || (tl.indexOf(‘voiture’) >= 0 && tl.indexOf(‘elect’) >= 0);
-if (isVoitureElec) { taux = 2.5; tvaAjustee = 0; }
-}
-if (pays === ‘france’) {
-var isVoitureElecFR = tl.indexOf(‘voiture elect’) >= 0 || tl.indexOf(‘vehicule elect’) >= 0 || (tl.indexOf(‘voiture’) >= 0 && tl.indexOf(‘elect’) >= 0);
-if (isVoitureElecFR) { majorationAD = 35.3; }
-}
-return { taux: taux, tva: tvaAjustee, majorationAD: majorationAD };
+  var t = TAUX[pays] || TAUX.france;
+  var l = type.toLowerCase();
+  var keys = Object.keys(t);
+  for (var i=0; i<keys.length; i++) {
+    if (keys[i] !== 'def' && l.indexOf(keys[i]) >= 0) return t[keys[i]];
+  }
+  return t.def;
 }
 
-function getCatCemac(taux) {
-if (taux <= 5) return ‘Categorie 1 - Matieres premieres / equipements industriels’;
-if (taux <= 10) return ‘Categorie 2 - Intrants / produits semi-finis’;
-if (taux <= 20) return ‘Categorie 3 - Biens de consommation courante’;
-return ‘Categorie 4 - Produits de luxe / sensibles’;
+function fmt(n) {
+  return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' EUR';
 }
 
-var INCO_DESC = {
-‘EXW’: { label: ‘Ex Works’, fourn: [‘Mise a disposition en usine uniquement’], vous: [‘Transport usine -> port/aeroport export’, ‘Formalites export Chine’, ‘Fret international’, ‘Assurance’, ‘Droits douane + TVA’] },
-‘FOB’: { label: ‘Free On Board’, fourn: [‘Transport usine -> port export’, ‘Formalites export Chine’, ‘Chargement bateau’], vous: [‘Fret maritime’, ‘Assurance’, ‘Frais portuaires arrivee (THC, B/L, manutention)’, ‘Droits douane + TVA’, ‘Transitaire obligatoire’] },
-‘CIF’: { label: ‘Cost Insurance Freight’, fourn: [‘Transport usine -> port depart’, ‘Formalites export Chine’, ‘Fret maritime’, ‘Assurance maritime’], vous: [‘Frais portuaires arrivee (THC, B/L, manutention)’, ‘Droits douane + TVA’, ‘Transitaire obligatoire’] },
-‘CFR’: { label: ‘Cost and Freight’, fourn: [‘Transport usine -> port depart’, ‘Formalites export Chine’, ‘Fret maritime’], vous: [‘Assurance (a votre charge)’, ‘Frais portuaires arrivee’, ‘Droits douane + TVA’, ‘Transitaire obligatoire’] },
-‘DAP’: { label: ‘Delivered At Place’, fourn: [‘Transport complet jusqu'a destination convenue’, ‘Formalites export + fret + assurance’], vous: [‘Droits douane + TVA uniquement’] },
-‘DDP’: { label: ‘Delivered Duty Paid’, fourn: [‘Tout inclus - livraison cle en main’, ‘Droits douane + TVA payes par le fournisseur’], vous: [‘Rien a payer a l'arrivee’] },
-‘CPT’: { label: ‘Carriage Paid To’, fourn: [‘Fret jusqu'a destination convenue’], vous: [‘Assurance a votre charge’, ‘Droits douane + TVA’] },
-‘Non precis’: { label: ‘Non precise’, fourn: [‘Non determine’], vous: [‘A clarifier avec le fournisseur’] }
-};
-
-function getFraisMaritime(conteneur, pays) {
-var base = {
-‘LCL’: { france: { thc: 120, bl: 40, manu: 80, stock: 40, transit: 320 }, maroc: { thc: 100, bl: 35, manu: 70, stock: 35, transit: 280 }, congo: { thc: 160, bl: 55, manu: 180, stock: 120, transit: 480 } },
-‘FCL20’: { france: { thc: 200, bl: 50, manu: 150, stock: 60, transit: 400 }, maroc: { thc: 170, bl: 45, manu: 130, stock: 55, transit: 350 }, congo: { thc: 250, bl: 70, manu: 250, stock: 180, transit: 600 } },
-‘FCL40’: { france: { thc: 280, bl: 60, manu: 200, stock: 80, transit: 480 }, maroc: { thc: 240, bl: 55, manu: 170, stock: 70, transit: 420 }, congo: { thc: 350, bl: 90, manu: 320, stock: 220, transit: 720 } },
-‘FCL40HC’: { france: { thc: 300, bl: 65, manu: 220, stock: 90, transit: 500 }, maroc: { thc: 260, bl: 60, manu: 190, stock: 80, transit: 440 }, congo: { thc: 380, bl: 100, manu: 350, stock: 250, transit: 750 } }
-};
-var key = conteneur === ‘LCL’ ? ‘LCL’ : conteneur === ‘FCL20’ ? ‘FCL20’ : conteneur === ‘FCL40HC’ ? ‘FCL40HC’ : ‘FCL40’;
-var p = pays || ‘france’;
-return (base[key] && base[key][p]) ? base[key][p] : base[‘LCL’][‘france’];
+function v(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
 }
 
-function getPoidsChargeable(poidsReel, volumeM3, mode) {
-if (!poidsReel && !volumeM3) return null;
-var pr = parseFloat(poidsReel) || 0;
-var vol = parseFloat(volumeM3) || 0;
-var pv = mode === ‘aerien’ ? vol * 167 : vol * 1000;
-if (!pr && !vol) return null;
-if (!pr) return { chargeable: pv, reel: 0, vol: pv, mode: mode, est_vol: true };
-if (!vol) return { chargeable: pr, reel: pr, vol: 0, mode: mode, est_vol: false };
-var chargeable = Math.max(pr, pv);
-return { chargeable: chargeable, reel: pr, vol: pv, mode: mode, est_vol: pv > pr };
+function updateSteps() {
+  for (var i=1; i<=4; i++) {
+    var d = document.getElementById('d'+i);
+    var l = i<4 ? document.getElementById('l'+i) : null;
+    if (i < S.step) { d.className='dot done'; d.textContent='ok'; if(l) l.className='line done'; }
+    else if (i === S.step) { d.className='dot active'; d.textContent=String(i); if(l) l.className='line'; }
+    else { d.className='dot'; d.textContent=String(i); if(l) l.className='line'; }
+  }
 }
 
-var DOSSIER = { ‘DHL’: 27, ‘UPS’: 27, ‘FedEx’: 22, ‘Colissimo’: 12, ‘ePacket’: 8, ‘4PX’: 10, ‘Yanwen’: 10, ‘Non precis’: 18, ‘Fournisseur’: 18 };
-
-function getNormes(type, sensibles, pays) {
-var normes = [];
-var tl = (type + ’ ’ + (S.produit.desc || ‘’)).toLowerCase();
-var hasBat = sensibles.indexOf(‘Batterie’) >= 0 || tl.indexOf(‘batterie’) >= 0 || tl.indexOf(‘trottinette’) >= 0 || tl.indexOf(‘velo elect’) >= 0;
-var hasElec = sensibles.indexOf(‘Electronique’) >= 0 || tl.indexOf(‘electron’) >= 0 || tl.indexOf(‘telephone’) >= 0 || tl.indexOf(‘smartphone’) >= 0 || tl.indexOf(‘casque’) >= 0;
-var hasText = sensibles.indexOf(‘Textile’) >= 0 || tl.indexOf(‘veste’) >= 0 || tl.indexOf(‘textile’) >= 0 || tl.indexOf(‘vetement’) >= 0 || tl.indexOf(‘robe’) >= 0;
-var hasAlim = sensibles.indexOf(‘Alimentaire’) >= 0 || tl.indexOf(‘aliment’) >= 0 || tl.indexOf(‘nourriture’) >= 0;
-var hasCosm = sensibles.indexOf(‘Cosmetique’) >= 0 || tl.indexOf(‘cosmet’) >= 0 || tl.indexOf(‘creme’) >= 0 || tl.indexOf(‘parfum’) >= 0;
-var hasMach = tl.indexOf(‘machine’) >= 0 || tl.indexOf(‘moteur’) >= 0 || tl.indexOf(‘velo elect’) >= 0 || tl.indexOf(‘trottinette elect’) >= 0;
-if (pays === ‘france’) {
-if (hasBat) { normes.push({ n: ‘obligatoire’, t: ‘UN38.3 - Batteries lithium’, d: ‘Rapport de test UN38.3 obligatoire. Exigez-le avant commande.’ }); normes.push({ n: ‘obligatoire’, t: ‘Directive 2006/66/CE - Marquage piles’, d: ‘Symbole poubelle barree obligatoire sur emballage.’ }); }
-if (hasElec || hasBat) { normes.push({ n: ‘obligatoire’, t: ‘Marquage CE + Directive RoHS’, d: ‘Declaration de Conformite CE (DoC) obligatoire.’ }); }
-if (hasMach) { normes.push({ n: ‘obligatoire’, t: ‘Directive Machines 2006/42/CE’, d: ‘Marquage CE Machines + notice en francais obligatoire.’ }); }
-if (hasText) { normes.push({ n: ‘obligatoire’, t: ‘Reglement UE 1007/2011 - Etiquetage fibres’, d: ‘Etiquette en francais avec composition fibres obligatoire.’ }); normes.push({ n: ‘obligatoire’, t: ‘Conformite REACH’, d: ‘Limites sur colorants azoiques, formaldehyde, metaux lourds.’ }); }
-if (hasAlim) { normes.push({ n: ‘obligatoire’, t: ‘Controle sanitaire DGAL/DGCCRF’, d: ‘Certificat sanitaire requis. Controle au point d'entree UE.’ }); }
-if (hasCosm) { normes.push({ n: ‘obligatoire’, t: ‘Notification CPNP + Reglement CE 1223/2009’, d: ‘Notification CPNP avant commercialisation.’ }); }
-if (normes.length === 0) { normes.push({ n: ‘recommande’, t: ‘Verification Access2Markets’, d: ‘Consultez trade.ec.europa.eu/access-to-markets.’ }); }
-normes.push({ n: ‘info’, t: ‘Source officielle’, d: ‘trade.ec.europa.eu (Access2Markets) et douane.gouv.fr (RITA)’ });
-} else if (pays === ‘maroc’) {
-normes.push({ n: ‘obligatoire’, t: ‘Declaration ADII - Douane Maroc’, d: ‘Declaration en douane via ADIL obligatoire.’ });
-if (hasText) { normes.push({ n: ‘obligatoire’, t: ‘Normes IMANOR - Textile’, d: ‘Verification sur imanor.ma recommandee.’ }); }
-if (hasElec) { normes.push({ n: ‘recommande’, t: ‘Certification ANRT’, d: ‘Equipements radioelectriques : certification ANRT possible.’ }); }
-if (hasAlim) { normes.push({ n: ‘obligatoire’, t: ‘Controle sanitaire ONSSA’, d: ‘Autorisation d'importation prealable obligatoire.’ }); }
-if (hasCosm) { normes.push({ n: ‘obligatoire’, t: ‘Enregistrement DLIMI - Cosmetiques’, d: ‘Enregistrement aupres de la DLIMI obligatoire.’ }); }
-normes.push({ n: ‘info’, t: ‘Verification officielle’, d: ‘douane.gov.ma (portail ADIL) pour les exigences exactes.’ });
-} else {
-normes.push({ n: ‘obligatoire’, t: ‘Dedouanement DGD Congo’, d: ‘Transitaire agree obligatoire. Documents : facture, B/L, certificat d'origine.’ });
-normes.push({ n: ‘obligatoire’, t: ‘Certificat d'origine Form A’, d: ‘Requis pour application des taux preferentiels.’ });
-if (hasAlim) { normes.push({ n: ‘obligatoire’, t: ‘Controle sanitaire - Congo’, d: ‘Autorisation sanitaire d'importation obligatoire.’ }); }
-normes.push({ n: ‘info’, t: ‘Source’, d: ‘douanes.gouv.cg ou transitaire agree a Pointe-Noire.’ });
-}
-return normes;
-}
-
-var FRANCHISE = {
-france: {
-droits: { seuil: 150, label: ‘Droits de douane dus au-dela de 150 EUR (valeur CIF). En dessous : exonere.’ },
-tva: { seuil: 0, label: ‘TVA due des le 1er euro depuis 2021. Aucune exoneration.’ },
-particulier: { label: ‘Particulier : imports jusqu'a 1000 EUR generalement sans controle approfondi.’ },
-pro: { label: ‘Pro : micro-entreprise (autoentrepreneur.urssaf.fr - gratuit, 15 min) ou SARL/SAS. Code EORI obligatoire pour imports reguliers.’ }
-},
-maroc: {
-droits: { seuil: 120, label: ‘Franchise partielle sous 1250 DH (~120 EUR) pour envois personnels.’ },
-tva: { seuil: 120, label: ‘TVA 20% due au-dela du seuil de franchise.’ },
-particulier: { label: ‘Particulier : envois personnels toleres jusqu'a 1250 DH.’ },
-pro: { label: ‘Pro : patente commerciale DGI Maroc + Registre de Commerce.’ }
-},
-congo: {
-droits: { seuil: 0, label: ‘Pas de franchise - tout import est taxe des le 1er franc CFA.’ },
-tva: { seuil: 0, label: ‘TVA 18.9% due sur toute importation sans seuil.’ },
-particulier: { label: ‘Particulier : petits colis via courrier postal possibles.’ },
-pro: { label: ‘Pro : RCCM + NIU fiscal + transitaire agree indispensable.’ }
-}
-};
-
-function getConseilConteneur(volM3, poidsKg) {
-var vol = parseFloat(volM3) || (parseFloat(poidsKg) / 1000) || 0;
-if (vol === 0) return null;
-if (vol < 10) return { type: ‘LCL’, raison: ‘Volume (’ + vol.toFixed(2) + ’ m3) < 10 m3 - groupage LCL plus economique.’ };
-if (vol < 22) return { type: ‘FCL20’, raison: ‘Volume (’ + vol.toFixed(2) + ’ m3) justifie FCL 20 pieds.’ };
-if (vol < 60) return { type: ‘FCL40’, raison: ‘Volume (’ + vol.toFixed(2) + ’ m3) justifie FCL 40 pieds.’ };
-return { type: ‘FCL40HC’, raison: ‘Volume (’ + vol.toFixed(2) + ’ m3) necessite FCL 40 HC.’ };
-}
-
-var recognition = null, activeInputId = null;
-function startMic(inputId, btn) {
-var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (!SpeechRec) { alert(‘Reconnaissance vocale non supportee. Utilisez Chrome.’); return; }
-if (recognition && activeInputId === inputId) { recognition.stop(); return; }
-if (recognition) recognition.stop();
-recognition = new SpeechRec();
-recognition.lang = ‘fr-FR’; recognition.continuous = false; recognition.interimResults = true;
-activeInputId = inputId;
-btn.classList.add(‘on’); btn.textContent = ‘stop’;
-recognition.onresult = function(e) {
-var t = Array.from(e.results).map(function(r) { return r[0].transcript; }).join(’’);
-var el = document.getElementById(inputId); if (el) el.value = t;
-};
-recognition.onend = function() { btn.classList.remove(‘on’); btn.textContent = ‘🎤’; recognition = null; activeInputId = null; };
-recognition.onerror = function() { btn.classList.remove(‘on’); btn.textContent = ‘🎤’; recognition = null; activeInputId = null; };
-recognition.start();
-}
-function mic(id) { return ‘<button class="mic-btn" type="button" onclick="startMic(\'' + id + '\',this)">🎤</button>’; }
-function micTA(id) { return ‘<button class="mic-btn ta-mic" type="button" onclick="startMic(\'' + id + '\',this)">🎤</button>’; }
-
-async function fetchTaric(term) {
-try {
-var url = ‘https://www.tarifdouanier.eu/api/v1/cnSuggest?term=’ + encodeURIComponent(term) + ‘&lang=fr&year=2026’;
-var r = await fetch(url);
-var data = await r.json();
-return Array.isArray(data) ? data.slice(0, 5) : [];
-} catch(e) { return []; }
-}
-
-function updateProgress() {
-var s = Math.min(S.step, 4);
-for (var i = 1; i <= 4; i++) {
-var d = document.getElementById(‘dot’ + i), l = i < 4 ? document.getElementById(‘ln’ + i) : null;
-if (!d) continue;
-d.className = ‘sdot’ + (i < s ? ’ done’ : i === s ? ’ active’ : ‘’);
-if (l) l.className = ‘sline’ + (i < s ? ’ done’ : ‘’);
-}
-var names = [‘Destination et Produit’, ‘Valeur’, ‘Transport’, ‘Statut et Risques’];
-document.getElementById(‘stepLbl’).textContent = s <= 4 ? ’Etape ’ + s + ’ / 4 - ’ + names[s-1] : ‘Analyse…’;
-document.getElementById(‘pctLbl’).textContent = s <= 4 ? (s * 25) + ‘%’ : ‘100%’;
-document.getElementById(‘progressWrap’).style.display = S.step >= 5 ? ‘none’ : ‘’;
-}
-
-var root = document.getElementById(‘root’);
 function render() {
-updateProgress(); root.innerHTML = ‘’;
-if (S.step === 1) r1();
-else if (S.step === 2) r2();
-else if (S.step === 3) r3();
-else if (S.step === 4) r4();
-else if (S.step === 5) rLoad();
-else rResult();
-window.scrollTo({ top: 0, behavior: ‘smooth’ });
+  updateSteps();
+  var root = document.getElementById('root');
+  if (S.step === 1) root.innerHTML = step1();
+  else if (S.step === 2) root.innerHTML = step2();
+  else if (S.step === 3) root.innerHTML = step3();
+  else if (S.step === 4) root.innerHTML = step4();
+  else if (S.step === 5) { root.innerHTML = calcResult(); }
+  window.scrollTo(0,0);
 }
 
-function r1() {
-var d = S.produit;
-var paysOpts = [{ v: ‘france’, l: ‘France’ }, { v: ‘maroc’, l: ‘Maroc’ }, { v: ‘congo’, l: ‘Congo-Brazzaville’ }];
-var html = ‘<div class="card">’
+function step1() {
+  var pays = ['france','maroc','congo'];
+  var labels = ['France','Maroc','Congo-Brazzaville'];
+  var pills = '';
+  for (var i=0; i<pays.length; i++) {
+    var active = S.pays === pays[i] ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
+    pills += '<button type="button" onclick="S.pays=\'' + pays[i] + '\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;margin-right:8px;margin-bottom:8px;cursor:pointer;"'+active+'>'+labels[i]+'</button>';
+  }
+  return '<div class="card">'
+    + '<h3 style="margin-bottom:16px;">Etape 1 / 4 - Destination et Produit</h3>'
+    + '<label>Pays de destination</label>'
+    + '<div style="margin-bottom:12px;">' + pills + '</div>'
+    + '<label>Type de produit *</label>'
+    + '<input id="f-type" placeholder="Ex: veste, telephone, velo..." value="'+S.produit.type+'"/>'
+    + '<label>Description (facultatif)</label>'
+    + '<input id="f-desc" placeholder="Ex: veste homme polyester" value="'+S.produit.desc+'"/>'
+    + '<label>Code HS (facultatif)</label>'
+    + '<input id="f-hs" placeholder="Ex: 620140" value="'+S.produit.hs+'"/>'
+    + '<div class="err" id="e1">Le type de produit est obligatoire.</div>'
+    + '<button onclick="goStep2()">Suivant - Valeur</button>'
+    + '</div>';
+}
 
-- ‘<div class="card-tag">Etape 1 sur 4</div>’
-- ‘<h2>Destination & Produit</h2>’
-- ‘<p class="sub">Choisissez le pays de destination puis decrivez votre produit.</p>’
-- ‘<div class="field" style="margin-bottom:14px;">’
-- ‘<div class="lbl">Pays de destination <span class="req">Obligatoire</span></div>’
-- ‘<div class="pills">’
-- paysOpts.map(function(p) { return ‘<div class="pill' + (S.pays === p.v ? ' active' : '') + '" onclick="setPays(\'' + p.v + '\',this)">’ + p.l + ‘</div>’; }).join(’’)
-- ‘</div></div>’
-- ‘<div class="grid two">’
-- ‘<div class="field"><div class="lbl">Type de produit <span class="req">Obligatoire</span></div>’
-- ‘<div class="input-wrap">’ + mic(‘f-type’) + ‘<input id="f-type" type="text" placeholder="Ex: veste, velo electrique..." value="' + esc(d.type) + '"/></div></div>’
-- ‘<div class="field"><div class="lbl">Description <span class="opt">Facultatif</span></div>’
-- ‘<div class="input-wrap">’ + mic(‘f-desc’) + ‘<input id="f-desc" type="text" placeholder="Ex: veste homme polyester sans marque" value="' + esc(d.desc) + '"/></div></div>’
-- ‘</div>’
-- ‘<div style="background:var(--s2);border:1px solid var(--border2);border-radius:13px;padding:14px;margin-top:12px;">’
-- ‘<div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;text-align:center;">Codes douaniers</div>’
-- ‘<div class="grid two">’
-- ‘<div class="field"><div class="lbl">Code HS <span style="font-size:9px;padding:2px 6px;border-radius:999px;background:rgba(74,154,255,.1);color:var(--blue2);border:1px solid rgba(74,154,255,.15);font-weight:700;">6 chiffres</span> <span class="opt">Facultatif</span></div>’
-- ‘<input class="bare" id="f-hs" type="text" placeholder="Ex: 620140" maxlength="8" value="' + esc(d.hs) + '" oninput="onHsInput(this)"/>’
-- ‘<div class="helper">L'outil recherche le TARIC automatiquement si France.</div></div>’
-- ‘<div class="field"><div class="lbl">Code TARIC <span style="font-size:9px;padding:2px 6px;border-radius:999px;background:rgba(0,223,160,.1);color:var(--green2);border:1px solid rgba(0,223,160,.15);font-weight:700;">10 chiffres - Prioritaire</span> <span class="opt">Facultatif</span></div>’
-- ‘<input class="bare" id="f-taric" type="text" placeholder="Ex: 6201401000" maxlength="10" value="' + esc(d.taric) + '"/>’
-- ‘<div class="helper">Taux officiel UE direct. Prioritaire sur le code HS.</div></div>’
-- ‘</div>’
-- ‘<div id="taricSugg" style="display:none;margin-top:12px;"><div id="sugList"></div></div>’
-- ‘</div>’
-- ‘<div class="grid two" style="margin-top:12px;">’
-- ‘<div class="field"><div class="lbl">Pays de fabrication <span class="opt">Facultatif</span></div>’
-- ‘<div class="input-wrap">’ + mic(‘f-fab’) + ‘<input id="f-fab" type="text" placeholder="Ex: Chine" value="' + esc(d.fabrication) + '"/></div></div>’
-- ‘</div>’
-- ‘<div class="err" id="e1">Le type de produit est obligatoire.</div>’
-- ‘<div class="actions"><button class="btn btn-primary" onclick="n1()">Suivant - Valeur et Quantite</button></div>’
-- ‘</div>’;
-  root.innerHTML = html;
+function goStep2() {
+  var t = v('f-type');
+  if (!t) { document.getElementById('e1').style.display='block'; return; }
+  S.produit.type = t;
+  S.produit.desc = v('f-desc');
+  S.produit.hs = v('f-hs');
+  S.step = 2; render();
+}
+
+function step2() {
+  return '<div class="card">'
+    + '<h3 style="margin-bottom:16px;">Etape 2 / 4 - Valeur et Quantite</h3>'
+    + '<label>Quantite *</label>'
+    + '<input id="f-qte" type="number" placeholder="Ex: 10" value="'+S.valeur.qte+'"/>'
+    + '<label>Valeur totale marchandise *</label>'
+    + '<input id="f-total" type="number" placeholder="Ex: 1200" value="'+S.valeur.total+'"/>'
+    + '<label>Devise</label>'
+    + '<select id="f-devise"><option value="EUR"'+(S.valeur.devise==='EUR'?' selected':'')+'>EUR</option><option value="USD"'+(S.valeur.devise==='USD'?' selected':'')+'>USD</option><option value="CNY"'+(S.valeur.devise==='CNY'?' selected':'')+'>CNY (Yuan)</option></select>'
+    + '<label>Poids total kg (facultatif)</label>'
+    + '<input id="f-poids" type="number" placeholder="Ex: 25" value="'+S.valeur.poids+'"/>'
+    + '<div class="err" id="e2">Quantite et valeur sont obligatoires.</div>'
+    + '<button onclick="goStep3()">Suivant - Transport</button>'
+    + '<button class="btn-sec" onclick="S.step=1;render()">Retour</button>'
+    + '</div>';
+}
+
+function goStep3() {
+  var q = v('f-qte'), t = v('f-total');
+  if (!q || !t) { document.getElementById('e2').style.display='block'; return; }
+  S.valeur.qte = q; S.valeur.total = t;
+  S.valeur.devise = v('f-devise');
+  S.valeur.poids = v('f-poids');
+  S.step = 3; render();
+}
+
+function step3() {
+  var aerienActive = S.transport.mode === 'aerien' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
+  var maritimeActive = S.transport.mode === 'maritime' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
+  return '<div class="card">'
+    + '<h3 style="margin-bottom:16px;">Etape 3 / 4 - Transport</h3>'
+    + '<label>Mode de transport</label>'
+    + '<div style="margin-bottom:12px;">'
+    + '<button type="button" onclick="S.transport.mode=\'aerien\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;margin-right:8px;cursor:pointer;"'+aerienActive+'>Aerien / Express</button>'
+    + '<button type="button" onclick="S.transport.mode=\'maritime\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;cursor:pointer;"'+maritimeActive+'>Maritime</button>'
+    + '</div>'
+    + '<label>Cout transport EUR *</label>'
+    + '<input id="f-cout" type="number" placeholder="Ex: 280" value="'+S.transport.cout+'"/>'
+    + '<label>Incoterm</label>'
+    + '<select id="f-inco"><option value="CIF"'+(S.transport.incoterm==='CIF'?' selected':'')+'>CIF</option><option value="FOB"'+(S.transport.incoterm==='FOB'?' selected':'')+'>FOB</option><option value="DAP"'+(S.transport.incoterm==='DAP'?' selected':'')+'>DAP</option><option value="DDP"'+(S.transport.incoterm==='DDP'?' selected':'')+'>DDP</option><option value="EXW"'+(S.transport.incoterm==='EXW'?' selected':'')+'>EXW</option></select>'
+    + '<div class="err" id="e3">Le cout de transport est obligatoire.</div>'
+    + '<button onclick="goStep4()">Suivant - Statut</button>'
+    + '<button class="btn-sec" onclick="S.step=2;render()">Retour</button>'
+    + '</div>';
+}
+
+function goStep4() {
+  var c = v('f-cout');
+  if (!c) { document.getElementById('e3').style.display='block'; return; }
+  S.transport.cout = c;
+  S.transport.incoterm = v('f-inco');
+  S.step = 4; render();
+}
+
+function step4() {
+  var partActive = S.statut.achat === 'Particulier' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
+  var proActive = S.statut.achat === 'Professionnel' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
+  var persoActive = S.statut.usage === 'Usage personnel' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
+  var reventeActive = S.statut.usage === 'Revente' ? ' style="border-color:#ff3f3f;background:rgba(255,63,63,.08);"' : '';
+  return '<div class="card">'
+    + '<h3 style="margin-bottom:16px;">Etape 4 / 4 - Statut</h3>'
+    + '<label>Mode achat</label>'
+    + '<div style="margin-bottom:12px;">'
+    + '<button type="button" onclick="S.statut.achat=\'Particulier\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;margin-right:8px;cursor:pointer;"'+partActive+'>Particulier</button>'
+    + '<button type="button" onclick="S.statut.achat=\'Professionnel\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;cursor:pointer;"'+proActive+'>Professionnel</button>'
+    + '</div>'
+    + '<label>Usage prevu</label>'
+    + '<div style="margin-bottom:16px;">'
+    + '<button type="button" onclick="S.statut.usage=\'Usage personnel\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;margin-right:8px;cursor:pointer;"'+persoActive+'>Usage perso</button>'
+    + '<button type="button" onclick="S.statut.usage=\'Revente\';render()" style="background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px;cursor:pointer;"'+reventeActive+'>Revente</button>'
+    + '</div>'
+    + '<button onclick="S.step=5;render()">Lancer le calcul</button>'
+    + '<button class="btn-sec" onclick="S.step=3;render()">Retour</button>'
+    + '</div>';
+}
+
+function calcResult() {
+  var pays = S.pays;
+  var conv = CONV[S.valeur.devise] || 1;
+  var valEUR = parseFloat(S.valeur.total) * conv;
+  var cout = parseFloat(S.transport.cout) || 0;
+  var base = valEUR + cout;
+  var taux = getTaux(S.produit.type, pays);
+  var tvaPct = TVA[pays] || 20;
+  var dd = base * taux / 100;
+  var tva = (base + dd) * tvaPct / 100;
+  var divers = Math.round(valEUR * 0.01);
+  var total = valEUR + cout + dd + tva + divers;
+
+  var paysLabel = pays === 'france' ? 'France' : pays === 'maroc' ? 'Maroc' : 'Congo-Brazzaville';
+  var isRevente = S.statut.usage === 'Revente';
+  var isParticulier = S.statut.achat === 'Particulier';
+  var risque = (isRevente && isParticulier) ? 'danger' : 'ok';
+
+  var html = '<div class="card" style="text-align:center;">'
+    + '<div style="font-size:11px;color:#8fa5c0;margin-bottom:4px;">TOTAL ESTIME A L\'ARRIVEE - ' + paysLabel.toUpperCase() + '</div>'
+    + '<div class="result-total">' + fmt(total) + '</div>'
+    + '<div style="font-size:12px;color:#6e849e;">' + fmt(valEUR) + ' marchandise + ' + fmt(cout) + ' transport + ' + fmt(dd+tva+divers) + ' taxes</div>'
+    + '</div>'
+    + '<div class="card">'
+    + '<h3 style="margin-bottom:12px;">Detail des couts</h3>'
+    + '<div class="row"><span>Valeur marchandise</span><span class="val">' + fmt(valEUR) + '</span></div>'
+    + '<div class="row"><span>Transport</span><span class="val">' + fmt(cout) + '</span></div>'
+    + '<div class="row"><span>Droits douane (' + taux + '%)</span><span class="val">' + fmt(dd) + '</span></div>'
+    + '<div class="row"><span>TVA (' + tvaPct + '%)</span><span class="val">' + fmt(tva) + '</span></div>'
+    + '<div class="row"><span>Divers (1%)</span><span class="val">' + fmt(divers) + '</span></div>'
+    + '<div class="row" style="font-weight:800;font-size:15px;"><span>TOTAL</span><span style="color:#ff3f3f;">' + fmt(total) + '</span></div>'
+    + '</div>';
+
+  if (isRevente && isParticulier) {
+    html += '<div class="alert alert-danger">ATTENTION : Revente en mode Particulier = activite commerciale non declaree. Risque de saisie douaniere. Creez une micro-entreprise avant de commander.</div>';
   }
 
-function setPays(pays, el) {
-S.pays = pays;
-el.closest(’.pills’).querySelectorAll(’.pill’).forEach(function(p) { p.classList.remove(‘active’); });
-el.classList.add(‘active’);
-}
+  html += '<div class="card">'
+    + '<h3 style="margin-bottom:12px;">Analyse Claude AI</h3>'
+    + '<div id="ai-block"><div class="ai-loading"><div class="spinner"></div><br/>Analyse en cours...</div></div>'
+    + '</div>';
 
-var hsDebounce = null;
-function onHsInput(el) {
-clearTimeout(hsDebounce);
-var val = el.value.trim();
-if (val.length >= 6 && S.pays === ‘france’) {
-hsDebounce = setTimeout(function() { lookupTaric(val); }, 800);
-}
-}
+  html += '<button onclick="S.step=1;S.produit={type:\'\',desc:\'\',hs:\'\'};S.valeur={qte:\'\',total:\'\',devise:\'EUR\',poids:\'\',volume:\'\'};S.transport={mode:\'aerien\',cout:\'\',incoterm:\'CIF\',transporteur:\'Non precis\'};S.statut={achat:\'Particulier\',usage:\'Usage personnel\'};render()">Nouvelle simulation</button>';
 
-async function lookupTaric(hs) {
-var sugg = document.getElementById(‘taricSugg’);
-var list = document.getElementById(‘sugList’);
-if (!sugg || !list) return;
-sugg.style.display = ‘block’;
-list.innerHTML = ‘<div style="font-size:12px;color:var(--muted);padding:8px 0;display:flex;align-items:center;gap:8px;"><div style="width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;"></div>Recherche TARIC…</div>’;
-var results = await fetchTaric(hs);
-S.taricOptions = results.map(function(r) { return { code: r.id || r.code || r.cn_code || ‘’, desc: r.description || r.desc || r.label || ‘’, rate: r.duty_rate || r.rate || null }; }).filter(function(r) { return r.code; });
-if (S.taricOptions.length === 0) { list.innerHTML = ‘<div style="font-size:12px;color:var(--amber2);padding:8px 0;">Aucun TARIC trouve. Saisissez-le manuellement ou consultez taric.europa.eu</div>’; return; }
-list.innerHTML = ‘<div style="font-size:11px;font-weight:600;color:var(--amber2);margin-bottom:8px;">TARIC possibles :</div>’
+  setTimeout(function() { callClaude(valEUR, cout, dd, tva, total, taux, tvaPct, pays, paysLabel); }, 500);
 
-- S.taricOptions.map(function(o, i) {
-  var rate = o.rate != null ? parseFloat(o.rate) : null;
-  var rateStr = rate != null ? rate + ‘%’ : ‘taux a verifier’;
-  return ‘<div onclick="selectTaric(\'' + o.code + '\',' + (o.rate || 'null') + ')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s3);border:1px solid var(--border2);border-radius:9px;margin-bottom:6px;cursor:pointer;">’
-- ‘<span style="font-family:Syne;font-weight:700;font-size:13px;color:var(--green);min-width:90px;">’ + o.code + ‘</span>’
-- ‘<span style="font-size:12px;color:var(--muted2);flex:1;">’ + (o.desc || ‘’) + ‘</span>’
-- ‘<span style="font-size:13px;font-weight:700;">’ + rateStr + ‘</span>’
-- ‘</div>’;
-  }).join(’’);
-  }
-
-function selectTaric(code, rate) {
-S.produit.taric = code;
-S.produit.taricRate = rate ? parseFloat(rate) : null;
-var ti = document.getElementById(‘f-taric’);
-if (ti) ti.value = code;
-}
-
-function n1() {
-var t = document.getElementById(‘f-type’).value.trim();
-if (!t) { document.getElementById(‘e1’).classList.add(‘show’); return; }
-S.produit.type = t;
-S.produit.desc = v(‘f-desc’);
-S.produit.hs = v(‘f-hs’);
-S.produit.taric = v(‘f-taric’) || S.produit.taric;
-S.produit.fabrication = v(‘f-fab’);
-S.step = 2; render();
-}
-
-function r2() {
-var d = S.valeur;
-root.innerHTML = ‘<div class="card">’
-
-- ‘<div class="card-tag">Etape 2 sur 4</div>’
-- ‘<h2>Valeur & quantite</h2>’
-- ‘<p class="sub">Base de calcul des taxes. Valeur = montant paye au fournisseur, hors transport.</p>’
-- ‘<div class="grid two">’
-- ‘<div class="field"><div class="lbl">Quantite <span class="req">Obligatoire</span></div><input class="bare" id="f-qte" type="number" placeholder="Ex: 20" value="' + d.qte + '" min="1"/></div>’
-- ‘<div class="field"><div class="lbl">Devise <span class="req">Obligatoire</span></div><select class="bare" id="f-devise">’ + opts([‘EUR’, ‘USD’, ‘CNY’], d.devise) + ‘</select></div>’
-- ‘<div class="field"><div class="lbl">Valeur totale marchandise <span class="req">Obligatoire</span></div><input class="bare" id="f-total" type="number" placeholder="Ex: 1200" value="' + d.total + '" min="0"/><div class="helper">Montant fournisseur hors transport.</div></div>’
-- ‘<div class="field"><div class="lbl">Poids reel total (kg) <span class="opt">Facultatif</span></div><input class="bare" id="f-poids" type="number" placeholder="Ex: 48" value="' + d.poids + '" min="0"/></div>’
-- ‘<div class="field"><div class="lbl">Volume total (m3 / CBM) <span class="opt">Facultatif</span></div><input class="bare" id="f-vol" type="text" placeholder="Ex: 0.60" value="' + d.volume + '"/><div class="helper">1 m3 = 167 kg aerien, 1000 kg maritime.</div></div>’
-- ‘</div>’
-- ‘<div class="err" id="e2">Quantite et valeur totale sont obligatoires.</div>’
-- ‘<div class="actions"><button class="btn btn-sec" onclick="go(1)">Retour</button><button class="btn btn-primary" onclick="n2()">Suivant - Transport</button></div>’
-- ‘</div>’;
-  }
-
-function n2() {
-var q = v(‘f-qte’), t = v(‘f-total’);
-if (!q || !t) { document.getElementById(‘e2’).classList.add(‘show’); return; }
-S.valeur.qte = q; S.valeur.total = t; S.valeur.devise = v(‘f-devise’);
-S.valeur.poids = v(‘f-poids’); S.valeur.volume = v(‘f-vol’);
-S.step = 3; render();
-}
-
-function r3() {
-var d = S.transport;
-var modeActif = d.mode || ‘aerien’;
-var portsList = S.pays === ‘france’ ? [‘Non precis’, ‘Marseille’, ‘Le Havre’, ‘Bordeaux’] : S.pays === ‘maroc’ ? [‘Non precis’, ‘Tanger Med’, ‘Casablanca’, ‘Agadir’] : [‘Non precis’, ‘Pointe-Noire’];
-root.innerHTML = ‘<div class="card">’
-
-- ‘<div class="card-tag">Etape 3 sur 4</div>’
-- ‘<h2>Transport & livraison</h2>’
-- ‘<p class="sub">Mode de transport et incoterm.</p>’
-- ‘<div class="mode-tabs">’
-- ‘<button class="mode-tab' + (modeActif === 'aerien' ? ' active' : '') + '" onclick="setModeT(\'aerien\',this)">Aerien / Express</button>’
-- ‘<button class="mode-tab' + (modeActif === 'maritime' ? ' active' : '') + '" onclick="setModeT(\'maritime\',this)">Maritime</button>’
-- ‘</div>’
-- ‘<div id="secAerien">’
-- ‘<div class="grid two">’
-- ‘<div class="field"><div class="lbl">Transporteur</div><select class="bare" id="f-trans">’ + opts([‘Non precis’, ‘DHL’, ‘UPS’, ‘FedEx’, ‘Colissimo’, ‘ePacket’, ‘4PX’, ‘Yanwen’, ‘Fournisseur’], d.transporteur) + ‘</select></div>’
-- ‘<div class="field"><div class="lbl">Cout transport (EUR) <span class="req">Obligatoire</span></div><input class="bare" id="f-cout-a" type="number" placeholder="Ex: 280" value="' + (modeActif === 'aerien' ? d.cout : '') + '" min="0"/></div>’
-- ‘<div class="field"><div class="lbl">Livraison incluse jusqu'a</div><select class="bare" id="f-liv">’ + opts([‘Domicile’, ‘Douane / Aeroport’, ‘Non precis’], d.livraison) + ‘</select></div>’
-- ‘<div class="field"><div class="lbl">Incoterm</div><select class="bare" id="f-inco-a" onchange="showIncoInfo(\'a\')">’ + opts([‘CIF’, ‘FOB’, ‘EXW’, ‘DAP’, ‘DDP’, ‘CPT’, ‘Non precis’], d.incoterm) + ‘</select>’
-- ‘<div class="inco-info" id="incoA"></div></div>’
-- ‘</div></div>’
-- ‘<div id="secMaritime" style="display:none;">’
-- ‘<div class="notice" style="margin-bottom:14px;"><span class="ni">ℹ️</span>Marchandise au port. Transitaire generalement necessaire. Frais portuaires estimatifs.</div>’
-- ‘<div class="grid two">’
-- ‘<div class="field"><div class="lbl">Compagnie maritime</div><select class="bare" id="f-compagnie">’ + opts([‘Non precise’, ‘MSC’, ‘Maersk’, ‘CMA CGM’, ‘COSCO’, ‘Evergreen’, ‘Hapag-Lloyd’, ‘ONE’, ‘Yang Ming’], d.compagnie) + ‘</select></div>’
-- ‘<div class="field"><div class="lbl">Type de conteneur</div><select class="bare" id="f-conteneur">’ + opts([‘LCL (Groupage)’, ‘FCL20 (20 pieds)’, ‘FCL40 (40 pieds)’, ‘FCL40HC (40 HC)’], d.conteneur) + ‘</select></div>’
-- ‘<div class="field"><div class="lbl">Cout fret maritime (EUR) <span class="req">Obligatoire</span></div><input class="bare" id="f-cout-m" type="number" placeholder="Ex: 800" value="' + (modeActif === 'maritime' ? d.cout : '') + '" min="0"/></div>’
-- ‘<div class="field"><div class="lbl">Port d'arrivee</div><select class="bare" id="f-port">’ + opts(portsList, d.port) + ‘</select></div>’
-- ‘<div class="field"><div class="lbl">Incoterm <span class="req">Recommande</span></div><select class="bare" id="f-inco-m" onchange="showIncoInfo(\'m\')">’ + opts([‘CIF’, ‘FOB’, ‘CFR’, ‘EXW’, ‘DAP’, ‘DDP’, ‘Non precis’], d.incoterm) + ‘</select>’
-- ‘<div class="inco-info" id="incoM"></div></div>’
-- ‘<div class="field"><div class="lbl">Transitaire prevu</div><select class="bare" id="f-transitaire">’ + opts([‘Non su’, ‘Oui prevu’, ‘Non pas encore’], d.transitaire) + ‘</select></div>’
-- ‘</div></div>’
-- ‘<div class="err" id="e3">Le cout de transport est obligatoire.</div>’
-- ‘<div class="actions"><button class="btn btn-sec" onclick="go(2)">Retour</button><button class="btn btn-primary" onclick="n3()">Suivant - Statut et Risques</button></div>’
-- ‘</div>’;
-  if (modeActif === ‘maritime’) {
-  document.getElementById(‘secAerien’).style.display = ‘none’;
-  document.getElementById(‘secMaritime’).style.display = ‘’;
-  }
-  }
-
-function setModeT(mode, el) {
-S.transport.mode = mode;
-document.querySelectorAll(’.mode-tab’).forEach(function(t) { t.classList.remove(‘active’); });
-el.classList.add(‘active’);
-document.getElementById(‘secAerien’).style.display = mode === ‘aerien’ ? ‘’ : ‘none’;
-document.getElementById(‘secMaritime’).style.display = mode === ‘maritime’ ? ‘’ : ‘none’;
-}
-
-function showIncoInfo(type) {
-var selId = type === ‘a’ ? ‘f-inco-a’ : ‘f-inco-m’;
-var infoId = type === ‘a’ ? ‘incoA’ : ‘incoM’;
-var sel = document.getElementById(selId);
-var info = document.getElementById(infoId);
-if (!sel || !info) return;
-var key = sel.value;
-var d = INCO_DESC[key];
-if (!d || key === ‘Non precis’) { info.classList.remove(‘show’); return; }
-info.innerHTML = ‘<strong>’ + d.label + ‘</strong><br/>Fournisseur : ’ + d.fourn.join(’, ’) + ‘<br/>Vous : ’ + d.vous.join(’, ’);
-info.classList.add(‘show’);
-}
-
-function n3() {
-var mode = S.transport.mode;
-var cout = mode === ‘aerien’ ? v(‘f-cout-a’) : v(‘f-cout-m’);
-if (!cout) { document.getElementById(‘e3’).classList.add(‘show’); return; }
-S.transport.cout = cout;
-if (mode === ‘aerien’) {
-S.transport.transporteur = v(‘f-trans’) || ‘Non precis’;
-S.transport.livraison = v(‘f-liv’) || ‘Domicile’;
-S.transport.incoterm = v(‘f-inco-a’) || ‘CIF’;
-} else {
-S.transport.compagnie = v(‘f-compagnie’) || ‘Non precise’;
-S.transport.conteneur = (v(‘f-conteneur’) || ‘LCL’).split(’ ’)[0];
-S.transport.port = v(‘f-port’) || ‘’;
-S.transport.incoterm = v(‘f-inco-m’) || ‘CIF’;
-S.transport.transitaire = v(‘f-transitaire’) || ‘Non su’;
-}
-S.step = 4; render();
-}
-
-var SENS_LIST = [‘Batterie / Lithium’, ‘Electronique’, ‘Textile’, ‘Alimentaire’, ‘Cosmetique’, ‘Produit volumineux’];
-function r4() {
-var d = S.statut;
-root.innerHTML = ‘<div class="card">’
-
-- ‘<div class="card-tag">Etape 4 sur 4</div>’
-- ‘<h2>Statut import & risques</h2>’
-- ‘<p class="sub">L'analyse verifie la coherence de votre situation et signale les risques reels.</p>’
-- ‘<div class="field" style="margin-bottom:13px;"><div class="lbl">Mode d'achat <span class="req">Obligatoire</span></div>’
-- ‘<div class="pills">’
-- [‘Particulier’, ‘Professionnel’].map(function(m) { return ‘<div class="pill' + (d.achat === m ? ' active' : '') + '" onclick="setPill(\'achat\',this,\'' + m + '\')">’ + m + ‘</div>’; }).join(’’)
-- ‘</div></div>’
-- ‘<div class="field" style="margin-bottom:13px;"><div class="lbl">Usage prevu <span class="req">Obligatoire</span></div>’
-- ‘<div class="pills">’
-- [[‘Usage personnel’, ‘Perso’], [‘Revente’, ‘Revente’], [‘Equipement activite’, ‘Pro’]].map(function(u) { return ‘<div class="pill' + (d.usage === u[0] ? ' active' : '') + '" onclick="setPill(\'usage\',this,\'' + u[0] + '\')">’ + u[1] + ‘</div>’; }).join(’’)
-- ‘</div></div>’
-- ‘<div class="field" style="margin-bottom:13px;"><div class="lbl">Caracteristiques sensibles <span class="opt">Facultatif</span></div>’
-- ‘<div class="checks">’
-- SENS_LIST.map(function(s) { return ‘<div class="check' + (d.sensibles.indexOf(s) >= 0 ? ' checked' : '') + '" onclick="toggleChk(this,\'' + s + '\')"><div class="cbox"></div><span>’ + s + ‘</span></div>’; }).join(’’)
-- ‘</div></div>’
-- ‘<div class="field"><div class="lbl">Remarques fournisseur <span class="opt">Facultatif</span></div>’
-- ‘<div class="input-wrap" style="position:relative;">’ + micTA(‘f-rem’) + ‘<textarea id="f-rem" style="padding-right:42px;" placeholder="Ex: fournisseur dit livraison domicile mais douane non incluse...">’ + esc(d.remarques) + ‘</textarea></div></div>’
-- ‘<div class="actions" style="margin-top:16px;"><button class="btn btn-sec" onclick="go(3)">Retour</button><button class="btn btn-primary" onclick="n4()">Lancer l'analyse complete</button></div>’
-- ‘</div>’;
-  }
-
-function setPill(field, el, val) {
-el.closest(’.pills’).querySelectorAll(’.pill’).forEach(function(p) { p.classList.remove(‘active’); });
-el.classList.add(‘active’);
-S.statut[field] = val;
-}
-function toggleChk(el, val) {
-el.classList.toggle(‘checked’);
-var i = S.statut.sensibles.indexOf(val);
-if (i > -1) S.statut.sensibles.splice(i, 1); else S.statut.sensibles.push(val);
-}
-function n4() {
-S.statut.remarques = v(‘f-rem’) || ‘’;
-S.step = 5; render();
-setTimeout(runAnalysis, 500);
-}
-function go(n) { S.step = n; render(); }
-
-function rLoad() {
-var isMaritime = S.transport.mode === ‘maritime’;
-var steps = isMaritime
-? [‘Calcul base taxable CIF et poids chargeable…’, ‘Application taux douaniers officiels…’, ‘Estimation frais portuaires selon conteneur…’, ’Calcul TVA et taxes ’ + S.pays + ‘…’, ‘Verification normes et restrictions…’, ‘Analyse incoterm et frais a votre charge…’, ‘Generation alertes et recommandations…’]
-: [‘Calcul base taxable CIF et poids chargeable…’, ‘Application taux douaniers officiels…’, ’Calcul TVA et taxes ’ + S.pays + ‘…’, ‘Verification normes et restrictions…’, ‘Analyse incoterm et frais a votre charge…’, ‘Generation alertes et recommandations…’];
-root.innerHTML = ‘<div class="loading-card">’
-
-- ‘<div class="orb"></div>’
-- ‘<div class="lt">Analyse en cours…</div>’
-- ’<div class="ls">Calcul complet des couts import Chine vers ’ + { france: ‘France’, maroc: ‘Maroc’, congo: ‘Congo-Brazzaville’ }[S.pays] + ‘</div>’
-- ‘<div class="lsteps">’
-- steps.map(function(s, i) { return ‘<div class="lstep" id="ls' + i + '"><div class="lspinner"></div><span>’ + s + ‘</span></div>’; }).join(’’)
-- ‘</div></div>’;
-  steps.forEach(function(_, i) {
-  setTimeout(function() {
-  var el = document.getElementById(‘ls’ + i); if (!el) return;
-  el.classList.add(‘active’);
-  if (i > 0) { var prev = document.getElementById(‘ls’ + (i-1)); if (prev) { prev.classList.remove(‘active’); prev.classList.add(‘done’); prev.querySelector(’.lspinner’).textContent = ‘✓’; } }
-  }, i * 550);
-  });
-  }
-
-function buildCalc() {
-var p = S.produit, vl = S.valeur, tr = S.transport, pays = S.pays;
-var conv = CONV[vl.devise] || 1;
-var valEUR = (parseFloat(vl.total) || 0) * conv;
-var cout = parseFloat(tr.cout) || 0;
-var isMaritime = tr.mode === ‘maritime’;
-var baseTaxable = valEUR + cout;
-var tauxAjuste = getTauxAjuste(p.type, p.desc, pays);
-var taux, tauxSource, tauxPrec;
-var majorationAD = tauxAjuste.majorationAD;
-var tvaPct = tauxAjuste.tva;
-if (pays === ‘france’ && p.taric && p.taricRate != null) {
-taux = p.taricRate; tauxSource = ‘TARIC ’ + p.taric + ’ - taux certifie’; tauxPrec = ‘haute’;
-} else if (pays === ‘france’ && p.hs) {
-taux = tauxAjuste.taux; tauxSource = ‘Code HS ’ + p.hs + ’ - taux estime’; tauxPrec = ‘moyenne’;
-} else if (pays === ‘france’) {
-taux = tauxAjuste.taux; tauxSource = ‘Estimation par categorie - taux indicatif’; tauxPrec = ‘base’;
-} else if (pays === ‘maroc’) {
-taux = tauxAjuste.taux; tauxSource = tauxAjuste.tva === 0 ? ‘Tarif ADIL Maroc - VE exonere’ : ‘Tarif douanier marocain (ADIL)’; tauxPrec = ‘moyenne’;
-} else {
-taux = tauxAjuste.taux; tauxSource = ’Tarif Exterieur Commun CEMAC - ’ + getCatCemac(taux); tauxPrec = ‘moyenne’;
-}
-var dd = baseTaxable * taux / 100;
-var ddAD = majorationAD > 0 ? baseTaxable * majorationAD / 100 : 0;
-var tva = (baseTaxable + dd + ddAD) * tvaPct / 100;
-var extraTaxes = [];
-if (ddAD > 0) { extraTaxes.push({ label: ‘Droits compensateurs / antidumping UE (’ + majorationAD + ‘%)’, val: ddAD }); }
-if (pays === ‘maroc’) { extraTaxes.push({ label: ‘TPI - Taxe Parafiscale Importation (0.25%)’, val: baseTaxable * 0.0025 }); }
-if (pays === ‘congo’) { extraTaxes.push({ label: ‘TCI - Taxe Communautaire Integration (1%)’, val: (baseTaxable + dd) * 0.01 }); extraTaxes.push({ label: ‘TIPAC (0.4%)’, val: (baseTaxable + dd) * 0.004 }); }
-var totalExtra = extraTaxes.reduce(function(a, b) { return a + b.val; }, 0);
-var dossier = DOSSIER[tr.transporteur] || 18;
-var divers = Math.round(valEUR * 0.01);
-var fraisMaritime = null, totalMaritime = 0;
-if (isMaritime) { fraisMaritime = getFraisMaritime(tr.conteneur, pays); totalMaritime = fraisMaritime.thc + fraisMaritime.bl + fraisMaritime.manu + fraisMaritime.stock + fraisMaritime.transit; }
-var poidsInfo = getPoidsChargeable(vl.poids, vl.volume, tr.mode);
-var total = valEUR + cout + dd + tva + totalExtra + dossier + divers + totalMaritime;
-var alertesSpeciales = detecterAlertesSpeciales(p.type, p.desc, pays);
-return { valEUR: valEUR, cout: cout, baseTaxable: baseTaxable, taux: taux, tauxSource: tauxSource, tauxPrec: tauxPrec, dd: dd, ddAD: ddAD, majorationAD: majorationAD, tvaPct: tvaPct, tva: tva, extraTaxes: extraTaxes, totalExtra: totalExtra, dossier: dossier, divers: divers, fraisMaritime: fraisMaritime, totalMaritime: totalMaritime, poidsInfo: poidsInfo, total: total, isMaritime: isMaritime, alertesSpeciales: alertesSpeciales };
-}
-
-function runAnalysis() {
-var calc = buildCalc();
-var st = S.statut, p = S.produit, vl = S.valeur, tr = S.transport, pays = S.pays;
-var today = new Date().toLocaleDateString(‘fr-FR’);
-var qte = parseInt(vl.qte) || 1;
-var isRevente = st.usage === ‘Revente’;
-var isActivite = st.usage === ‘Equipement activite’;
-var isParticulier = st.achat === ‘Particulier’;
-var grosVol = qte > 5;
-var contredit = isParticulier && (isRevente || isActivite || (grosVol && calc.valEUR > 500));
-var verdictPP = contredit ? ‘danger’ : (isParticulier && (grosVol || calc.valEUR > 1000)) ? ‘warn’ : ‘ok’;
-var modeConseille = contredit ? ‘Professionnel’ : st.achat;
-var raisonPP, explPP;
-if (isRevente && isParticulier) {
-raisonPP = ‘Revente declaree = activite commerciale. Structure juridique obligatoire.’;
-explPP = ‘Importer ’ + qte + ’ unite’ + (qte > 1 ? ‘s’ : ‘’) + ’ pour revente en mode particulier est illegal. Creez une structure : micro-entreprise en France (gratuit, 15 min sur autoentrepreneur.urssaf.fr). Vous recupererez ’ + Math.round(calc.tva) + ’ EUR de TVA.’;
-} else if (isActivite && isParticulier) {
-raisonPP = ‘Equipement professionnel - mode pro recommande pour recuperer la TVA.’;
-explPP = ‘En mode professionnel vous recuperez ’ + Math.round(calc.tva) + ’ EUR de TVA et deduisez les droits (’ + Math.round(calc.dd) + ’ EUR).’;
-} else if (isParticulier && grosVol) {
-raisonPP = qte + ’ unites : risque de requalification en usage commercial.’;
-explPP = ‘Importer ’ + qte + ’ unites identiques en particulier peut attirer l'attention douaniere.’;
-} else if (isParticulier) {
-raisonPP = qte + ’ unite’ + (qte > 1 ? ‘s’ : ‘’) + ’ usage personnel - mode particulier coherent.’;
-explPP = ‘Pour ’ + qte + ’ unite’ + (qte > 1 ? ‘s’ : ‘’) + ’ a usage strictement personnel, le mode particulier est adapte.’;
-} else {
-raisonPP = ‘Import professionnel - cadre juridique correct.’;
-explPP = ‘Le mode professionnel est adapte. Conservez toutes les factures. Code EORI recommande pour imports reguliers.’;
-}
-var normes = getNormes(p.type, st.sensibles, pays);
-var alertes = [];
-if (pays === ‘france’ && !p.taric && !p.hs) alertes.push({ t: ‘warn’, m: ‘Aucun code HS/TARIC - taux ’ + calc.taux + ‘% estime. Demandez le code HS au fournisseur.’ });
-else if (pays === ‘france’ && p.hs && !p.taric) alertes.push({ t: ‘info’, m: ‘Code HS ’ + p.hs + ’ utilise. Le TARIC a 10 chiffres donnerait le taux certifie.’ });
-else if (pays === ‘france’ && p.taric) alertes.push({ t: ‘ok’, m: ‘Code TARIC ’ + p.taric + ’ confirme - taux certifie (’ + calc.taux + ‘%).’ });
-if (pays === ‘maroc’) alertes.push({ t: ‘info’, m: ‘Taux par categorie. Pour le taux exact : portail ADIL douane.gov.ma’ });
-if (pays === ‘congo’) alertes.push({ t: ‘info’, m: ‘Taux CEMAC : ’ + getCatCemac(calc.taux) + ’ (’ + calc.taux + ‘%). TCI 1% + TIPAC 0.4% + TVA 18.9%.’ });
-if (contredit) alertes.push({ t: ‘danger’, m: qte + ’ unites + “’ + st.usage + ‘” en Particulier = import commercial non declare. Risque saisie et redressement.’ });
-if (tr.incoterm === ‘Non precis’) alertes.push({ t: ‘warn’, m: ‘Incoterm non precise - base CIF calculee. Demandez l'incoterm au fournisseur.’ });
-if (st.sensibles.indexOf(‘Batterie / Lithium’) >= 0 || p.type.toLowerCase().indexOf(‘batterie’) >= 0) alertes.push({ t: ‘danger’, m: ‘Batteries lithium : verifiez conditions DHL/FedEx/UPS. Rapport UN38.3 obligatoire.’ });
-if (calc.isMaritime) {
-alertes.push({ t: ‘info’, m: ‘Frais portuaires estimatifs. Demandez un devis a votre transitaire.’ });
-alertes.push({ t: ‘warn’, m: ‘Delai maritime Chine -> ’ + pays + ’ : environ 25-35 jours.’ });
-if (pays === ‘congo’) alertes.push({ t: ‘warn’, m: ‘Congo : procedures douanieres 2-4 semaines. Transitaire local recommande.’ });
-}
-if (pays === ‘maroc’ && calc.valEUR > 1000) alertes.push({ t: ‘info’, m: ‘Maroc > 1000 EUR : domiciliation bancaire souvent requise.’ });
-var incoDetail = INCO_DESC[tr.incoterm] || INCO_DESC[‘Non precis’];
-var paysLabel = { france: ‘France’, maroc: ‘Maroc’, congo: ‘Congo-Brazzaville’ }[pays];
-var sourceLabel = { france: ‘France : TARIC UE (tarifdouanier.eu) + Access2Markets + douane.gouv.fr’, maroc: ‘Maroc : Tarif ADIL (douane.gov.ma)’, congo: ‘Congo : Tarif Exterieur Commun CEMAC’ }[pays];
-S.result = { calc: calc, pays: pays, paysLabel: paysLabel, sourceLabel: sourceLabel, incoDetail: incoDetail, normes: normes, alertes: alertes, perso_pro: { verdict: verdictPP, conseille: modeConseille, contredit: contredit, raison: raisonPP, explication: explPP }, conseil: contredit ? ‘Creez une micro-entreprise avant de commander - gratuit, vous recuperez ’ + Math.round(calc.tva) + ’ EUR de TVA.’ : calc.isMaritime ? ‘Contactez un transitaire agree pour un devis portuaire precis.’ : !p.hs ? ‘Demandez le code HS a votre fournisseur - il le connait.’ : ‘Demandez facture commerciale + liste de colisage - la douane les exige.’, today: today };
-S.step = 6; render();
-}
-
-// ═══════════════════════════════════════════════════════
-// FONCTION APPEL CLAUDE — APPEL NETLIFY FUNCTION
-// ═══════════════════════════════════════════════════════
-async function callClaudeAPI() {
-var claudeBlock = document.getElementById(‘ai-analysis-block’);
-if (!claudeBlock) return;
-
-// Affichage loading
-claudeBlock.innerHTML = buildAILoadingHTML();
-
-var calc = S.result.calc;
-var importData = {
-type: S.produit.type,
-desc: S.produit.desc,
-pays: S.result.paysLabel,
-qte: S.valeur.qte,
-total: S.valeur.total,
-devise: S.valeur.devise,
-valEUR: Math.round(calc.valEUR),
-cout: Math.round(calc.cout),
-mode: S.transport.mode,
-incoterm: S.transport.incoterm,
-baseTaxable: Math.round(calc.baseTaxable),
-taux: calc.taux,
-dd: Math.round(calc.dd),
-tva: Math.round(calc.tva),
-tvaPct: calc.tvaPct,
-total_final: Math.round(calc.total),
-poids: S.valeur.poids,
-volume: S.valeur.volume,
-taric: S.produit.taric,
-achat: S.statut.achat,
-usage: S.statut.usage,
-sensibles: S.statut.sensibles,
-remarques: S.statut.remarques
-};
-
-try {
-var response = await fetch(NETLIFY_FUNCTION_URL, {
-method: ‘POST’,
-headers: { ‘Content-Type’: ‘application/json’ },
-body: JSON.stringify({ importData: importData })
-});
-
-if (!response.ok) {
-var errData = await response.json().catch(function() { return {}; });
-throw new Error(errData.error || ’Erreur HTTP ’ + response.status);
-}
-
-var data = await response.json();
-if (!data.success || !data.analysis) throw new Error(‘Reponse invalide du serveur.’);
-
-claudeBlock.innerHTML = buildAIResultHTML(data.analysis);
-
-} catch (err) {
-claudeBlock.innerHTML = buildAIErrorHTML(err.message);
-}
-}
-
-function buildAILoadingHTML() {
-return ‘<div class="ai-block-header">’
-
-- ‘<div class="ai-orb">*</div>’
-- ‘<h3>Analyse Claude AI en cours…</h3>’
-- ‘<span class="ai-badge">LIVE</span>’
-- ‘</div>’
-- ‘<div class="ai-loading">’
-- ‘<div class="ai-spinner-wrap"></div>’
-- ‘<div class="ai-loading-text">Claude analyse votre dossier import…</div>’
-- ‘<div class="ai-loading-sub">Lecture des donnees · Croisement des risques · Generation de conseils</div>’
-- ‘</div>’;
-  }
-
-function buildAIResultHTML(a) {
-var risqueClass = a.risque === ‘faible’ ? ‘ai-risque-faible’ : a.risque === ‘eleve’ ? ‘ai-risque-eleve’ : ‘ai-risque-moyen’;
-var risqueIcon = a.risque === ‘faible’ ? ‘OK’ : a.risque === ‘eleve’ ? ‘!’ : ‘!’;
-var risqueLabel = a.risque === ‘faible’ ? ‘Risque faible’ : a.risque === ‘eleve’ ? ‘Risque élevé’ : ‘Risque moyen’;
-
-var html = ‘<div class="ai-block-header">’
-
-- ‘<div class="ai-orb">*</div>’
-- ‘<h3>Analyse Claude AI</h3>’
-- ‘<span class="ai-badge">LIVE</span>’
-- ‘</div>’;
-
-html += ‘<div class="ai-risque ' + risqueClass + '">’ + risqueIcon + ’ ’ + risqueLabel + ‘</div>’;
-
-if (a.resume) {
-html += ‘<div class="ai-resume">’ + esc(a.resume) + ‘</div>’;
-}
-
-if (a.points_cles && a.points_cles.length > 0) {
-html += ‘<div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;">Points clés</div>’;
-html += ‘<div class="ai-points">’;
-a.points_cles.forEach(function(pt) {
-html += ‘<div class="ai-point"><div class="ai-dot"></div><span>’ + esc(pt) + ‘</span></div>’;
-});
-html += ‘</div>’;
-}
-
-if (a.alertes && a.alertes.length > 0) {
-a.alertes.forEach(function(al) {
-html += ‘<div class="ai-alert"><span>!</span><span>’ + esc(al) + ‘</span></div>’;
-});
-}
-
-if (a.conseil_principal) {
-html += ‘<div class="ai-conseil"><span class="ai-conseil-ico">-></span><span><strong>Conseil prioritaire : </strong>’ + esc(a.conseil_principal) + ‘</span></div>’;
-}
-
-if (a.optimisation) {
-html += ‘<div class="ai-opti"><span class="ai-opti-ico">eco</span><span><strong>Optimisation possible : </strong>’ + esc(a.optimisation) + ‘</span></div>’;
-}
-
-html += ‘<div class="ai-footer">’
-
-- ‘<div class="ai-footer-dot"></div>’
-- ‘<span>Analyse generee par Claude (Anthropic) · Indicatif — consultez un transitaire pour confirmation</span>’
-- ‘</div>’;
-
-return html;
-}
-
-function buildAIErrorHTML(message) {
-var isConfig = message && (message.indexOf(‘ANTHROPIC_API_KEY’) >= 0 || message.indexOf(‘non configuree’) >= 0);
-return ‘<div class="ai-block-header">’
-
-- ‘<div class="ai-orb">*</div>’
-- ‘<h3>Analyse Claude AI</h3>’
-- ‘</div>’
-- ‘<div class="ai-error">’
-- (isConfig
-  ? ‘⚙️ <strong>Configuration requise</strong><br/>La clé API Anthropic n'est pas encore configurée dans Netlify.<br/><small>Allez dans : Site settings → Environment variables → Ajoutez ANTHROPIC_API_KEY</small>’
-  : ’❌ Erreur lors de l'analyse : ’ + esc(message || ‘Probleme de connexion.’) + ‘<br/><small>Verifiez que la fonction Netlify est bien deployee.</small>’)
-- ‘<br/><button class="ai-retry" onclick="callClaudeAPI()">🔄 Réessayer</button>’
-- ‘</div>’;
-  }
-
-// ═══════════════════════════════════════════════════════
-// FRANCHISE + STATUT PRO BLOCK
-// ═══════════════════════════════════════════════════════
-function buildFranchiseBlock(pays, calc) {
-var f = FRANCHISE[pays];
-var st = S.statut;
-var isPro = st.achat === ‘Professionnel’;
-var valEUR = calc.valEUR;
-var paysLabel = { france: ‘France’, maroc: ‘Maroc’, congo: ‘Congo-Brazzaville’ }[pays];
-var html = ’<div class="rsec" style="animation-delay:.32s"><h3><span class="sico" style="background:rgba(245,160,32,.1);">ℹ</span>Seuils franchise et statut import - ’ + paysLabel + ‘</h3>’;
-html += ‘<div style="margin-bottom:12px;">’;
-if (f.droits.seuil > 0) {
-var okD = valEUR < f.droits.seuil;
-html += ‘<div class="aitem ' + (okD ? 'a-ok' : 'a-warn') + '" style="margin-bottom:6px;"><span class="aico">’ + (okD ? ‘✓’ : ‘!’) + ’</span><span><strong>Droits de douane :</strong> ’ + f.droits.label + ‘</span></div>’;
-} else {
-html += ’<div class="aitem a-warn" style="margin-bottom:6px;"><span class="aico">!</span><span><strong>Droits de douane :</strong> ’ + f.droits.label + ‘</span></div>’;
-}
-html += ’<div class="aitem a-info" style="margin-bottom:6px;"><span class="aico">i</span><span><strong>TVA :</strong> ’ + f.tva.label + ‘</span></div>’;
-html += ‘</div>’;
-html += ‘<div style="background:var(--s2);border-radius:10px;padding:13px;">’;
-html += ’<div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:8px;">Statut import - ’ + (isPro ? ‘Mode Professionnel’ : ‘Mode Particulier’) + ‘</div>’;
-html += ‘<div style="font-size:13px;color:var(--muted2);line-height:1.6;">’ + (isPro ? f.pro.label : f.particulier.label) + ‘</div>’;
-if (calc.isMaritime) {
-html += ‘<div class="aitem a-warn" style="margin-top:10px;"><span class="aico">!</span><span><strong>Maritime : transitaire agree obligatoire</strong> pour sortir la marchandise du port.</span></div>’;
-} else {
-html += ‘<div class="aitem a-ok" style="margin-top:10px;"><span class="aico">✓</span><span><strong>Aerien : pas de transitaire externe necessaire.</strong> DHL/UPS/FedEx gerent le dedouanement.</span></div>’;
-}
-html += ‘</div></div>’;
-return html;
-}
-
-function buildComparaison(calc, pays) {
-var vl = S.valeur;
-var valEUR = calc.valEUR;
-var taux = calc.taux;
-var tvaPct = calc.tvaPct;
-var poidsKg = parseFloat(vl.poids) || 0;
-var volM3 = parseFloat(vl.volume) || 0;
-if (!poidsKg && !volM3) {
-return ‘<div class="rsec" style="animation-delay:.27s"><h3><span class="sico" style="background:rgba(74,154,255,.1);">vs</span>Aerien vs Maritime</h3>’
-
-- ‘<div class="aitem a-info"><span class="aico">i</span><span>Renseignez le poids et/ou le volume (etape 2) pour obtenir une comparaison.</span></div>’
-- ‘</div>’;
-  }
-  var poidsAerien = Math.max(poidsKg, volM3 * 167);
-  var tarifAerienKg = pays === ‘congo’ ? 7.5 : pays === ‘maroc’ ? 5.5 : 4.5;
-  var tarifMaritimeCBM = pays === ‘congo’ ? 280 : pays === ‘maroc’ ? 180 : 120;
-  var fretAerien = poidsAerien > 0 ? poidsAerien * tarifAerienKg : 0;
-  var baseAerien = valEUR + fretAerien;
-  var ddAerien = baseAerien * taux / 100;
-  var tvaAerien = (baseAerien + ddAerien) * tvaPct / 100;
-  var totalAerien = valEUR + fretAerien + ddAerien + tvaAerien + 22 + Math.round(valEUR * 0.01);
-  var volEffectif = volM3 > 0 ? volM3 : poidsKg / 1000;
-  var fretMaritime = volEffectif > 0 ? volEffectif * tarifMaritimeCBM : 0;
-  var fm = getFraisMaritime(‘LCL’, pays);
-  var fraisPortuaires = fm.thc + fm.bl + fm.manu + fm.stock + fm.transit;
-  var baseMaritime = valEUR + fretMaritime;
-  var ddMaritime = baseMaritime * taux / 100;
-  var tvaMaritime = (baseMaritime + ddMaritime) * tvaPct / 100;
-  var totalMaritime = valEUR + fretMaritime + ddMaritime + tvaMaritime + fraisPortuaires + Math.round(valEUR * 0.01);
-  var modeGagnant = totalAerien <= totalMaritime ? ‘aerien’ : ‘maritime’;
-  var economie = Math.abs(totalMaritime - totalAerien);
-  var modeActuel = calc.isMaritime ? ‘maritime’ : ‘aerien’;
-  var html = ‘<div class="rsec" style="animation-delay:.27s"><h3><span class="sico" style="background:rgba(74,154,255,.1);">vs</span>Aerien vs Maritime - Quel mode est le plus rentable ?</h3>’;
-  html += ‘<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">’
-- ‘<div style="background:var(--s2);border:' + (modeGagnant === 'aerien' ? '2px solid var(--green)' : '1px solid var(--border2)') + ';border-radius:12px;padding:13px;text-align:center;">’
-- (modeGagnant === ‘aerien’ ? ‘<div style="font-size:10px;font-weight:700;color:var(--green);margin-bottom:5px;">RECOMMANDE</div>’ : ‘’)
-- ‘<div style="font-size:16px;margin-bottom:4px;">Aerien</div>’
-- ‘<div style="font-family:Syne;font-weight:800;font-size:18px;">’ + fmt(totalAerien) + ‘</div>’
-- ’<div style="font-size:11px;color:var(--muted);margin-top:4px;">Fret : ’ + fmt(fretAerien) + ‘<br/>Delai : 5-10 jours</div>’
-- ‘</div>’
-- ‘<div style="background:var(--s2);border:' + (modeGagnant === 'maritime' ? '2px solid var(--green)' : '1px solid var(--border2)') + ';border-radius:12px;padding:13px;text-align:center;">’
-- (modeGagnant === ‘maritime’ ? ‘<div style="font-size:10px;font-weight:700;color:var(--green);margin-bottom:5px;">RECOMMANDE</div>’ : ‘’)
-- ‘<div style="font-size:16px;margin-bottom:4px;">Maritime LCL</div>’
-- ‘<div style="font-family:Syne;font-weight:800;font-size:18px;">’ + fmt(totalMaritime) + ‘</div>’
-- ’<div style="font-size:11px;color:var(--muted);margin-top:4px;">Fret+port : ’ + fmt(fretMaritime + fraisPortuaires) + ‘<br/>Delai : 30-40 jours</div>’
-- ‘</div>’
-- ‘</div>’;
-  html += ‘<div class="aitem a-ok"><span class="aico">✓</span><span>Mode recommande : <strong>’ + (modeGagnant === ‘aerien’ ? ‘Aerien’ : ‘Maritime LCL’) + ’</strong> — economie de ’ + fmt(economie) + ‘.</span></div>’;
-  if (modeActuel !== modeGagnant) {
-  html += ‘<div class="aitem a-warn"><span class="aico">!</span><span>Vous avez selectionne le mode <strong>’ + modeActuel + ‘</strong> mais le mode <strong>’ + modeGagnant + ’</strong> serait plus avantageux de ’ + fmt(economie) + ‘.</span></div>’;
-  }
-  var conseilCont = getConseilConteneur(vl.volume, vl.poids);
-  if (conseilCont) {
-  html += ’<div class="aitem a-info" style="margin-top:4px;"><span class="aico">i</span><span><strong>Conseil conteneur :</strong> ’ + conseilCont.raison + ‘</span></div>’;
-  }
-  html += ‘</div>’;
   return html;
-  }
+}
 
-function fmt(n) { return new Intl.NumberFormat(‘fr-FR’, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ’ EUR’; }
-function fmtP(n) { return n.toFixed(1) + ‘%’; }
+function callClaude(valEUR, cout, dd, tva, total, taux, tvaPct, pays, paysLabel) {
+  var block = document.getElementById('ai-block');
+  if (!block) return;
 
-function rResult() {
-var r = S.result;
-var calc = r.calc, pays = r.pays;
-var st = S.statut, p = S.produit, tr = S.transport;
-var recClass = { danger: ‘rb-danger’, warn: ‘rb-warn’, ok: ‘rb-ok’ }[r.perso_pro.verdict] || ‘rb-warn’;
-var rvClass = { danger: ‘rv-danger’, warn: ‘rv-warn’, ok: ‘rv-ok’ }[r.perso_pro.verdict] || ‘rv-warn’;
-var precClass = { haute: ‘prec-haute’, moyenne: ‘prec-moy’, base: ‘prec-base’ }[calc.tauxPrec] || ‘prec-base’;
-var precLabel = { haute: ‘Precision haute - TARIC certifie’, moyenne: ‘Precision moyenne - taux par categorie’, base: ‘Precision indicative - estimation texte’ }[calc.tauxPrec];
+  var prompt = 'Analyse import: Produit=' + S.produit.type + ' Destination=' + paysLabel + ' Valeur=' + Math.round(valEUR) + 'EUR Transport=' + S.transport.mode + ' Incoterm=' + S.transport.incoterm + ' Droits=' + Math.round(dd) + 'EUR TVA=' + Math.round(tva) + 'EUR Total=' + Math.round(total) + 'EUR Statut=' + S.statut.achat + '-' + S.statut.usage;
 
-var html = ‘<div class="result-hero">’
-
-- ’<div class="total-lbl">Cout total estime a l'arrivee - ’ + r.paysLabel + ‘</div>’
-- ‘<div class="total-amt">’ + fmt(calc.total) + ‘</div>’
-- ‘<div class="total-sub">’ + fmt(calc.valEUR) + ’ marchandise + ’ + fmt(calc.cout) + ’ transport + ’ + fmt(calc.total - calc.valEUR - calc.cout) + ’ taxes et frais</div>’
-- ‘<div class="rec-badge ' + recClass + '">’  + ’Mode conseille : ’ + r.perso_pro.conseille + (r.perso_pro.contredit ? ’ (vous avez selectionne ’ + st.achat + ‘)’ : ‘’) + ‘</div>’
-- ‘</div>’;
-
-// ALERTES SPECIALES
-if (calc.alertesSpeciales && calc.alertesSpeciales.length > 0) {
-html += ‘<div class="rsec" style="border-color:rgba(255,200,50,.3);margin-bottom:12px;">’
-
-- ‘<h3><span class="sico" style="background:rgba(255,200,50,.15);">!</span>Alertes speciales - Exonerations et Antidumping</h3>’
-- calc.alertesSpeciales.map(function(a) {
-  var cls = a.type === ‘ok’ ? ‘a-ok’ : a.type === ‘danger’ ? ‘a-danger’ : a.type === ‘warn’ ? ‘a-warn’ : ‘a-info’;
-  return ‘<div class="aitem ' + cls + '"><span class="aico">!</span><span>’ + a.msg + ‘</span></div>’;
-  }).join(’’)
-- ‘</div>’;
-  }
-
-// ═══════════════════════════════════════════════════════
-// BLOC ANALYSE CLAUDE AI (injecté ici, juste après le héro)
-// ═══════════════════════════════════════════════════════
-html += ‘<div class="ai-block" id="ai-analysis-block">’
-
-- ‘<div class="ai-block-header">’
-- ‘<div class="ai-orb">*</div>’
-- ‘<h3>Analyse Claude AI</h3>’
-- ‘<span class="ai-badge">LIVE</span>’
-- ‘</div>’
-- ‘<div style="text-align:center;padding:16px 0;">’
-- ‘<div style="font-size:13px;color:var(--muted2);margin-bottom:12px;">Obtenez une analyse experte de votre dossier import par Claude (Anthropic)</div>’
-- ‘<button class="btn btn-primary" style="display:inline-flex;max-width:280px;" onclick="callClaudeAPI()">’
-- ‘✦ Lancer l'analyse Claude AI’
-- ‘</button>’
-- ‘</div>’
-- ‘</div>’;
-
-// DETAIL COUTS
-html += ‘<div class="rsec"><h3><span class="sico ic-cost">€</span>Detail des couts</h3>’
-
-- ‘<div class="' + precClass + ' prec-badge">’ + precLabel + ‘</div>’
-- ‘<div class="ctable">’;
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">Valeur marchandise</div><div class="cexpl">’ + S.valeur.total + ’ ’ + S.valeur.devise + ‘</div></div><div class="cright"><div class="cval">’ + fmt(calc.valEUR) + ‘</div></div></div>’;
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">Frais de transport</div><div class="cexpl">’ + (calc.isMaritime ? ‘Maritime’ : ‘Aerien’) + ’ - ’ + (tr.transporteur || tr.compagnie || ‘’) + ‘</div></div><div class="cright"><div class="cval">’ + fmt(calc.cout) + ‘</div></div></div>’;
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">Droits de douane</div><div class="cexpl">’ + fmtP(calc.taux) + ’ x ’ + fmt(calc.baseTaxable) + ’ - ’ + calc.tauxSource + ‘</div></div><div class="cright"><div class="cval">’ + fmt(calc.dd) + ‘</div><div class="cpct">’ + fmtP(calc.taux) + ‘</div></div></div>’;
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">TVA (’ + calc.tvaPct + ‘%)</div></div><div class="cright"><div class="cval">’ + fmt(calc.tva) + ‘</div></div></div>’;
-  calc.extraTaxes.forEach(function(e) {
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">’ + e.label + ‘</div></div><div class="cright"><div class="cval">’ + fmt(e.val) + ‘</div></div></div>’;
+  fetch('/.netlify/functions/claude', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({importData: {
+      type: S.produit.type, pays: paysLabel,
+      qte: S.valeur.qte, total: S.valeur.total, devise: S.valeur.devise,
+      valEUR: Math.round(valEUR), cout: Math.round(cout),
+      mode: S.transport.mode, incoterm: S.transport.incoterm,
+      baseTaxable: Math.round(valEUR+cout), taux: taux,
+      dd: Math.round(dd), tva: Math.round(tva), tvaPct: tvaPct,
+      total_final: Math.round(total),
+      achat: S.statut.achat, usage: S.statut.usage,
+      sensibles: [], remarques: ''
+    }})
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (!data.success || !data.analysis) throw new Error('Reponse invalide');
+    var a = data.analysis;
+    var risqueClass = a.risque === 'faible' ? 'badge-ok' : a.risque === 'eleve' ? 'badge-danger' : 'badge-warn';
+    var html = '<span class="badge ' + risqueClass + '">Risque ' + (a.risque || 'moyen') + '</span>'
+      + '<p style="font-size:14px;font-weight:600;margin-bottom:12px;">' + (a.resume || '') + '</p>';
+    if (a.points_cles && a.points_cles.length) {
+      for (var i=0; i<a.points_cles.length; i++) {
+        html += '<div class="alert alert-info">' + a.points_cles[i] + '</div>';
+      }
+    }
+    if (a.conseil_principal) {
+      html += '<div class="alert alert-warn">Conseil : ' + a.conseil_principal + '</div>';
+    }
+    block.innerHTML = html;
+  })
+  .catch(function(err) {
+    block.innerHTML = '<div class="alert alert-danger">Erreur Claude : ' + err.message + '</div>';
   });
-  if (calc.isMaritime && calc.fraisMaritime) {
-  var fm = calc.fraisMaritime;
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">THC - Terminal Handling Charge</div><div class="cexpl">Estimation</div></div><div class="cright"><div class="cval">’ + fmt(fm.thc) + ‘</div></div></div>’;
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">B/L - Bill of Lading</div><div class="cexpl">Estimation</div></div><div class="cright"><div class="cval">’ + fmt(fm.bl) + ‘</div></div></div>’;
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">Manutention et stockage port</div><div class="cexpl">Estimation</div></div><div class="cright"><div class="cval">’ + fmt(fm.manu + fm.stock) + ‘</div></div></div>’;
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">Honoraires transitaire</div><div class="cexpl">Estimation</div></div><div class="cright"><div class="cval">’ + fmt(fm.transit) + ‘</div></div></div>’;
-  }
-  html += ‘<div class="crow"><div class="cleft"><div class="clabel">Frais dossier et divers</div></div><div class="cright"><div class="cval">’ + fmt(calc.dossier + calc.divers) + ‘</div></div></div>’;
-  html += ‘<div class="crow total-row"><div class="cleft"><div class="clabel">TOTAL RENDU ’ + r.paysLabel.toUpperCase() + ‘</div></div><div class="cright"><div class="cval">’ + fmt(calc.total) + ‘</div></div></div>’;
-  html += ‘</div>’;
-  if (calc.poidsInfo) {
-  var pi = calc.poidsInfo;
-  html += ‘<div class="poids-box">Poids chargeable : ’ + pi.chargeable.toFixed(1) + ’ kg’ + (pi.reel && pi.vol ? ’ (reel : ’ + pi.reel + ’ kg | vol : ’ + pi.vol.toFixed(1) + ’ kg)’ : ‘’) + ‘</div>’;
-  }
-  html += ‘<div class="src-row"><div class="srdot srd-green"></div><span>’ + r.sourceLabel + ‘</span><span class="srdate">’ + r.today + ‘</span></div>’;
-  html += ‘</div>’;
-
-// INCOTERM
-var id = r.incoDetail;
-html += ‘<div class="rsec" style="animation-delay:.07s"><h3><span class="sico ic-inco">ℹ</span>Incoterm ’ + tr.incoterm + ’ - Qui paie quoi</h3>’
-
-- ‘<div class="inco-block">’
-- ’<div class="inco-block-title">Responsabilites - ’ + id.label + ‘</div>’
-- id.fourn.map(function(f) { return ‘<div class="inco-row"><span class="inco-who iw-four">Fournisseur</span><span class="inco-desc">’ + f + ‘</span></div>’; }).join(’’)
-- id.vous.map(function(vv) { return ‘<div class="inco-row"><span class="inco-who iw-vous">Vous</span><span class="inco-desc">’ + vv + ‘</span></div>’; }).join(’’)
-- ‘</div></div>’;
-
-// NORMES
-html += ‘<div class="rsec" style="animation-delay:.12s"><h3><span class="sico ic-norms">📄</span>Normes et documents requis</h3>’
-
-- r.normes.map(function(n) {
-  if (n.n === ‘info’) return ‘<div class="aitem a-info"><span class="aico">i</span><span>’ + n.d + ‘</span></div>’;
-  var dotC = n.n === ‘obligatoire’ ? ‘nd-req’ : n.n === ‘recommande’ ? ‘nd-rec’ : ‘nd-opt’;
-  var tagC = n.n === ‘obligatoire’ ? ‘ntag-req’ : n.n === ‘recommande’ ? ‘ntag-rec’ : ‘ntag-opt’;
-  return ‘<div class="norm-item"><div class="ndot ' + dotC + '"></div><div><div class="ntitle">’ + n.t + ‘<span class="ntag ' + tagC + '">’ + n.n + ‘</span></div><div class="ndesc">’ + n.d + ‘</div></div></div>’;
-  }).join(’’)
-- ‘</div>’;
-
-// ALERTES
-html += ‘<div class="rsec" style="animation-delay:.17s"><h3><span class="sico ic-alert">⚠</span>Alertes et points de vigilance</h3>’
-
-- r.alertes.map(function(a) {
-  return ‘<div class="aitem a-' + a.t + '"><span class="aico">’ + { danger: ‘!’, warn: ‘!’, ok: ‘✓’, info: ‘i’ }[a.t] + ‘</span><span>’ + a.m + ‘</span></div>’;
-  }).join(’’)
-- ‘</div>’;
-
-// PERSO/PRO
-html += ‘<div class="rsec" style="animation-delay:.22s"><h3><span class="sico ic-rec">👤</span>Recommandation - Perso vs Pro</h3>’
-
-- ‘<div class="rv ' + rvClass + '">’ + (r.perso_pro.contredit ? ’Attention - ’ : ‘’) + ’Mode conseille : ’ + r.perso_pro.conseille + ‘</div>’
-- ‘<div class="rec-box">’ + r.perso_pro.raison + ‘<br/><br/>’ + r.perso_pro.explication + ‘</div>’
-- ‘</div>’;
-
-// COMPARAISON
-html += buildComparaison(calc, pays);
-
-// FRANCHISE
-html += buildFranchiseBlock(pays, calc);
-
-// CONSEIL FINAL + ACTIONS
-html += ‘<div class="rsec" style="animation-delay:.37s">’
-
-- ‘<div class="aitem a-info"><span class="aico">-></span><span><strong>Conseil final : </strong>’ + r.conseil + ‘</span></div>’
-- ‘<div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:13px;">’
-- ‘<button class="btn btn-green" onclick="exportPDF()">📄 Telecharger PDF</button>’
-- ‘<button class="btn btn-ghost" onclick="resetApp()">🔄 Nouvelle simulation</button>’
-- ‘</div>’
-- ’<div class="disclaimer">Estimation indicative. ’ + r.sourceLabel + ‘. Pour declaration officielle, consultez un transitaire agree.</div>’
-- ‘</div>’;
-
-root.innerHTML = html;
-
-// Déclencher l'appel Claude automatiquement après rendu
-setTimeout(callClaudeAPI, 300);
 }
-
-function exportPDF() {
-var r = S.result, calc = r.calc;
-var p = S.produit, vl = S.valeur, tr = S.transport, st = S.statut;
-var date = new Date().toLocaleDateString(‘fr-FR’, { day: ‘2-digit’, month: ‘long’, year: ‘numeric’ });
-var css = ‘*{box-sizing:border-box;}body{font-family:Arial,sans-serif;max-width:700px;margin:24px auto;color:#1f2937;font-size:12px;padding:14px;}h1{font-size:18px;border-bottom:3px solid #e53935;padding-bottom:5px;}h2{font-size:12px;margin:14px 0 5px;border-left:3px solid #e53935;padding-left:5px;}.meta{color:#6b7280;font-size:10px;margin-bottom:14px;}table{width:100%;border-collapse:collapse;margin-bottom:9px;}td,th{padding:5px 7px;border-bottom:1px solid #e7eaf2;font-size:11px;}th{background:#f8fafc;font-weight:700;text-align:left;font-size:9.5px;text-transform:uppercase;}td:last-child{text-align:right;font-weight:600;}.tr td{font-size:13px;font-weight:800;border-top:2px solid #111;}.tr td:last-child{color:#e53935;}.box{border-radius:4px;padding:7px 9px;margin-bottom:5px;font-size:11px;line-height:1.5;}.warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}.ok{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;}.danger{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;}.info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;}.footer{margin-top:18px;font-size:9.5px;color:#9ca3af;border-top:1px solid #e7eaf2;padding-top:7px;}’;
-var normesHtml = r.normes.filter(function(n) { return n.n !== ‘info’; }).map(function(n) {
-var cls = n.n === ‘obligatoire’ ? ‘danger’ : n.n === ‘recommande’ ? ‘warn’ : ‘ok’;
-return ‘<div class="box ' + cls + '"><strong>’ + n.t + ‘</strong> [’ + n.n + ‘]<br/>’ + n.d + ‘</div>’;
-}).join(’’);
-var alertesHtml = r.alertes.map(function(a) {
-var cls = a.t === ‘ok’ ? ‘ok’ : a.t === ‘danger’ ? ‘danger’ : a.t === ‘info’ ? ‘info’ : ‘warn’;
-return ‘<div class="box ' + cls + '">’ + a.m + ‘</div>’;
-}).join(’’);
-var html = ‘<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>ImportCalc V3</title><style>’ + css + ‘</style></head><body>’
-
-- ’<h1>ImportCalc V3 - Chine vers ’ + r.paysLabel + ‘</h1>’
-- ’<div class="meta">Genere le ’ + date + ’ | Mode : ’ + (calc.isMaritime ? ‘Maritime’ : ‘Aerien’) + ’ | ’ + r.sourceLabel + ‘</div>’
-- ‘<h2>Resume dossier</h2>’
-- ‘<table><tr><th>Champ</th><th>Valeur</th></tr>’
-- ‘<tr><td>Produit</td><td>’ + p.type + (p.desc ? ’, ’ + p.desc : ‘’) + ‘</td></tr>’
-- ‘<tr><td>Destination</td><td>’ + r.paysLabel + ‘</td></tr>’
-- ‘<tr><td>Code HS</td><td>’ + (p.hs || ‘-’) + ‘</td></tr>’
-- ‘<tr><td>Code TARIC</td><td>’ + (p.taric || ‘-’) + ‘</td></tr>’
-- ‘<tr><td>Quantite</td><td>’ + vl.qte + ’ unites</td></tr>’
-- ‘<tr><td>Transport</td><td>’ + (calc.isMaritime ? ‘Maritime’ : ‘Aerien’) + ’ - Incoterm ’ + tr.incoterm + ‘</td></tr>’
-- ‘<tr><td>Mode achat</td><td>’ + st.achat + ’ - ’ + st.usage + ‘</td></tr>’
-- ‘</table>’
-- ‘<h2>Couts a l'arrivee</h2>’
-- ‘<table><tr><th>Poste</th><th>Montant</th></tr>’
-- ‘<tr><td>Valeur marchandise</td><td>’ + fmt(calc.valEUR) + ‘</td></tr>’
-- ‘<tr><td>Frais de transport</td><td>’ + fmt(calc.cout) + ‘</td></tr>’
-- ‘<tr><td>Droits de douane (’ + fmtP(calc.taux) + ‘)</td><td>’ + fmt(calc.dd) + ‘</td></tr>’
-- ‘<tr><td>TVA (’ + calc.tvaPct + ‘%)</td><td>’ + fmt(calc.tva) + ‘</td></tr>’
-- calc.extraTaxes.map(function(e) { return ‘<tr><td>’ + e.label + ‘</td><td>’ + fmt(e.val) + ‘</td></tr>’; }).join(’’)
-- (calc.isMaritime ? ‘<tr><td>Frais portuaires et transitaire</td><td>’ + fmt(calc.totalMaritime) + ‘</td></tr>’ : ‘’)
-- ‘<tr><td>Frais dossier et divers</td><td>’ + fmt(calc.dossier + calc.divers) + ‘</td></tr>’
-- ’<tr class="tr"><td>TOTAL RENDU ’ + r.paysLabel.toUpperCase() + ‘</td><td>’ + fmt(calc.total) + ‘</td></tr>’
-- ‘</table>’
-- ‘<h2>Normes et documents</h2>’ + normesHtml
-- ‘<h2>Alertes</h2>’ + alertesHtml
-- ‘<h2>Recommandation</h2>’
-- ‘<div class="box ' + (r.perso_pro.verdict === 'ok' ? 'ok' : r.perso_pro.verdict === 'danger' ? 'danger' : 'warn') + '"><strong>’ + r.perso_pro.raison + ‘</strong><br/>’ + r.perso_pro.explication + ‘</div>’
-- ‘<div class="footer">ImportCalc V3 - ’ + r.sourceLabel + ’ - Estimation indicative.</div>’
-- ‘</body></html>’;
-  var blob = new Blob([html], { type: ‘text/html;charset=utf-8’ });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement(‘a’);
-  a.href = url;
-  a.download = ‘ImportCalc_V3_’ + p.type.replace(/\s+/g, ‘-’) + ‘_’ + r.paysLabel + ‘.html’;
-  document.body.appendChild(a); a.click();
-  setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
-  }
-
-function resetApp() {
-S.step = 1; S.result = null; S.taricOptions = [];
-S.pays = ‘france’;
-S.produit = { type: ‘’, desc: ‘’, hs: ‘’, taric: ‘’, taricRate: null, fabrication: ‘’ };
-S.valeur = { qte: ‘’, total: ‘’, devise: ‘EUR’, poids: ‘’, volume: ‘’ };
-S.transport = { mode: ‘aerien’, cout: ‘’, transporteur: ‘Non precis’, incoterm: ‘CIF’, livraison: ‘Domicile’, compagnie: ‘Non precise’, conteneur: ‘LCL’, port: ‘’, transitaire: ‘Non su’ };
-S.statut = { achat: ‘Particulier’, usage: ‘Usage personnel’, sensibles: [], remarques: ‘’ };
-render();
-}
-
-function v(id) { var el = document.getElementById(id); return el ? el.value.trim() : ‘’; }
-function esc(s) {
-if (!s) return ‘’;
-var r = String(s);
-r = r.split(’&’).join(’&’);
-r = r.split(’<’).join(’<’);
-r = r.split(’>’).join(’>’);
-r = r.split(’”’).join(’"’);
-return r;
-}
-function opts(arr, sel) { return arr.map(function(o) { return ‘<option’ + (o === sel ? ’ selected’ : ‘’) + ‘>’ + o + ‘</option>’; }).join(’’); }
 
 render();
 </script>
