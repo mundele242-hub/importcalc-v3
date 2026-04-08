@@ -618,7 +618,7 @@ window.scrollTo({ top: 0, behavior: ‘smooth’ });
 
 function r1() {
 var d = S.produit;
-var paysOpts = [{ v: ‘france’, l: ‘🇫🇷 France’ }, { v: ‘maroc’, l: ‘🇲🇦 Maroc’ }, { v: ‘congo’, l: ‘🇨🇬 Congo-Brazzaville’ }];
+var paysOpts = [{ v: ‘france’, l: ‘France’ }, { v: ‘maroc’, l: ‘Maroc’ }, { v: ‘congo’, l: ‘Congo-Brazzaville’ }];
 var html = ‘<div class="card">’
 
 - ‘<div class="card-tag">Etape 1 sur 4</div>’
@@ -1039,7 +1039,7 @@ claudeBlock.innerHTML = buildAIErrorHTML(err.message);
 function buildAILoadingHTML() {
 return ‘<div class="ai-block-header">’
 
-- ‘<div class="ai-orb">✦</div>’
+- ‘<div class="ai-orb">*</div>’
 - ‘<h3>Analyse Claude AI en cours…</h3>’
 - ‘<span class="ai-badge">LIVE</span>’
 - ‘</div>’
@@ -1052,12 +1052,12 @@ return ‘<div class="ai-block-header">’
 
 function buildAIResultHTML(a) {
 var risqueClass = a.risque === ‘faible’ ? ‘ai-risque-faible’ : a.risque === ‘eleve’ ? ‘ai-risque-eleve’ : ‘ai-risque-moyen’;
-var risqueIcon = a.risque === ‘faible’ ? ‘✅’ : a.risque === ‘eleve’ ? ‘🔴’ : ‘⚠️’;
+var risqueIcon = a.risque === ‘faible’ ? ‘OK’ : a.risque === ‘eleve’ ? ‘!’ : ‘!’;
 var risqueLabel = a.risque === ‘faible’ ? ‘Risque faible’ : a.risque === ‘eleve’ ? ‘Risque élevé’ : ‘Risque moyen’;
 
 var html = ‘<div class="ai-block-header">’
 
-- ‘<div class="ai-orb">✦</div>’
+- ‘<div class="ai-orb">*</div>’
 - ‘<h3>Analyse Claude AI</h3>’
 - ‘<span class="ai-badge">LIVE</span>’
 - ‘</div>’;
@@ -1079,16 +1079,16 @@ html += ‘</div>’;
 
 if (a.alertes && a.alertes.length > 0) {
 a.alertes.forEach(function(al) {
-html += ‘<div class="ai-alert"><span>⚡</span><span>’ + esc(al) + ‘</span></div>’;
+html += ‘<div class="ai-alert"><span>!</span><span>’ + esc(al) + ‘</span></div>’;
 });
 }
 
 if (a.conseil_principal) {
-html += ‘<div class="ai-conseil"><span class="ai-conseil-ico">💡</span><span><strong>Conseil prioritaire : </strong>’ + esc(a.conseil_principal) + ‘</span></div>’;
+html += ‘<div class="ai-conseil"><span class="ai-conseil-ico">-></span><span><strong>Conseil prioritaire : </strong>’ + esc(a.conseil_principal) + ‘</span></div>’;
 }
 
 if (a.optimisation) {
-html += ‘<div class="ai-opti"><span class="ai-opti-ico">📉</span><span><strong>Optimisation possible : </strong>’ + esc(a.optimisation) + ‘</span></div>’;
+html += ‘<div class="ai-opti"><span class="ai-opti-ico">eco</span><span><strong>Optimisation possible : </strong>’ + esc(a.optimisation) + ‘</span></div>’;
 }
 
 html += ‘<div class="ai-footer">’
@@ -1104,7 +1104,7 @@ function buildAIErrorHTML(message) {
 var isConfig = message && (message.indexOf(‘ANTHROPIC_API_KEY’) >= 0 || message.indexOf(‘non configuree’) >= 0);
 return ‘<div class="ai-block-header">’
 
-- ‘<div class="ai-orb">✦</div>’
+- ‘<div class="ai-orb">*</div>’
 - ‘<h3>Analyse Claude AI</h3>’
 - ‘</div>’
 - ‘<div class="ai-error">’
@@ -1243,7 +1243,7 @@ html += ‘<div class="rsec" style="border-color:rgba(255,200,50,.3);margin-bott
 html += ‘<div class="ai-block" id="ai-analysis-block">’
 
 - ‘<div class="ai-block-header">’
-- ‘<div class="ai-orb">✦</div>’
+- ‘<div class="ai-orb">*</div>’
 - ‘<h3>Analyse Claude AI</h3>’
 - ‘<span class="ai-badge">LIVE</span>’
 - ‘</div>’
@@ -1329,7 +1329,7 @@ html += buildFranchiseBlock(pays, calc);
 // CONSEIL FINAL + ACTIONS
 html += ‘<div class="rsec" style="animation-delay:.37s">’
 
-- ‘<div class="aitem a-info"><span class="aico">🎯</span><span><strong>Conseil final : </strong>’ + r.conseil + ‘</span></div>’
+- ‘<div class="aitem a-info"><span class="aico">-></span><span><strong>Conseil final : </strong>’ + r.conseil + ‘</span></div>’
 - ‘<div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:13px;">’
 - ‘<button class="btn btn-green" onclick="exportPDF()">📄 Telecharger PDF</button>’
 - ‘<button class="btn btn-ghost" onclick="resetApp()">🔄 Nouvelle simulation</button>’
