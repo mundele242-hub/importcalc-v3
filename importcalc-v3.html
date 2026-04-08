@@ -6,313 +6,312 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>ImportCalc V3</title>
 <style>
-body{background:#070b12;color:#eef2ff;font-family:sans-serif;margin:0;padding:20px;}
-h1{color:#ff3f3f;}
-#root{margin-top:20px;}
-.card{background:#0e1520;border:1px solid #1c2b40;border-radius:14px;padding:20px;margin-bottom:12px;}
-label{display:block;margin-bottom:5px;color:#8fa5c0;font-size:13px;}
-input,select,textarea{width:100%;background:#131d2e;border:1px solid #223350;border-radius:8px;padding:10px;color:#eef2ff;font-size:14px;box-sizing:border-box;margin-bottom:12px;}
-.pill-btn{display:block;width:100%;background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:14px;margin-bottom:10px;cursor:pointer;font-size:15px;font-weight:600;text-align:center;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(255,63,63,.2);transition:all .15s;}
-.pill-btn.active{border-color:#ff3f3f;background:rgba(255,63,63,.15);color:#ff3f3f;}
-.pill-btn-sm{display:inline-block;background:#131d2e;border:2px solid #223350;color:#eef2ff;border-radius:8px;padding:10px 16px;margin-right:8px;margin-bottom:8px;cursor:pointer;font-size:14px;font-weight:600;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(255,63,63,.2);}
-.pill-btn-sm.active{border-color:#ff3f3f;background:rgba(255,63,63,.15);color:#ff3f3f;}
-button{background:#ff3f3f;color:#fff;border:none;border-radius:8px;padding:12px 20px;font-size:14px;cursor:pointer;width:100%;}
-.err{color:#ff7060;font-size:13px;display:none;margin-bottom:8px;}
-.step{display:flex;align-items:center;margin-bottom:16px;}
-.dot{width:28px;height:28px;border-radius:50%;border:2px solid #223350;display:flex;align-items:center;justify-content:center;font-size:11px;color:#6e849e;margin-right:8px;flex-shrink:0;}
-.dot.active{border-color:#ff3f3f;color:#ff3f3f;}
-.dot.done{background:#00dfa0;border-color:#00dfa0;color:#070b12;}
-.line{flex:1;height:2px;background:#223350;margin-right:8px;}
-.line.done{background:#00dfa0;}
-.result-total{font-size:36px;font-weight:800;text-align:center;margin:16px 0;}
-.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1c2b40;font-size:13px;}
-.row:last-child{border:none;}
-.row .val{font-weight:700;}
-.badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;margin-bottom:12px;}
-.badge-ok{background:rgba(0,223,160,.1);color:#00dfa0;border:1px solid rgba(0,223,160,.2);}
-.badge-warn{background:rgba(245,160,32,.1);color:#fbbf24;border:1px solid rgba(245,160,32,.2);}
-.badge-danger{background:rgba(255,63,63,.1);color:#ff8070;border:1px solid rgba(255,63,63,.2);}
-.alert{padding:10px 12px;border-radius:8px;font-size:12px;margin-bottom:8px;line-height:1.5;}
-.alert-info{background:rgba(74,154,255,.06);border:1px solid rgba(74,154,255,.15);color:#78b8ff;}
-.alert-warn{background:rgba(245,160,32,.06);border:1px solid rgba(245,160,32,.15);color:#fbbf24;}
-.alert-danger{background:rgba(255,63,63,.06);border:1px solid rgba(255,63,63,.15);color:#ff8070;}
-.ai-block{background:rgba(255,63,63,.04);border:1px solid rgba(255,63,63,.2);border-radius:14px;padding:16px;margin-bottom:12px;}
-.ai-loading{text-align:center;padding:16px;color:#8fa5c0;}
-.spinner{display:inline-block;width:24px;height:24px;border:3px solid rgba(255,63,63,.2);border-top-color:#ff3f3f;border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#070b12;color:#eef2ff;font-family:sans-serif;padding:16px;}
+h1{color:#ff3f3f;font-size:22px;margin-bottom:16px;}
+.card{background:#0e1520;border:1px solid #1c2b40;border-radius:12px;padding:16px;margin-bottom:12px;}
+h3{font-size:16px;margin-bottom:14px;}
+label{display:block;font-size:12px;color:#8fa5c0;margin-bottom:5px;}
+input,select{width:100%;background:#131d2e;border:1px solid #223350;border-radius:8px;padding:11px;color:#eef2ff;font-size:14px;margin-bottom:12px;-webkit-appearance:none;}
+.btn{display:block;width:100%;background:#ff3f3f;color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;text-align:center;}
 .btn-sec{background:#131d2e;border:1px solid #223350;color:#8fa5c0;margin-top:8px;}
+.step-row{display:flex;align-items:center;margin-bottom:18px;}
+.dot{width:30px;height:30px;border-radius:50%;border:2px solid #223350;display:flex;align-items:center;justify-content:center;font-size:12px;color:#6e849e;flex-shrink:0;}
+.dot.on{border-color:#ff3f3f;color:#ff3f3f;}
+.line{flex:1;height:2px;background:#223350;}
+.hidden{display:none;}
+.result-big{text-align:center;font-size:38px;font-weight:800;color:#eef2ff;padding:16px 0;}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #1c2b40;font-size:13px;}
+.row:last-child{border:none;}
+.row b{font-weight:700;}
+.row.total{font-size:15px;font-weight:800;}
+.row.total b{color:#ff3f3f;}
+.alert{padding:10px;border-radius:8px;font-size:13px;margin-bottom:8px;line-height:1.5;}
+.ai{background:rgba(74,154,255,.06);border:1px solid rgba(74,154,255,.15);color:#78b8ff;}
+.warn{background:rgba(245,160,32,.06);border:1px solid rgba(245,160,32,.15);color:#fbbf24;}
+.danger{background:rgba(255,63,63,.06);border:1px solid rgba(255,63,63,.15);color:#ff8070;}
+.ok{background:rgba(0,223,160,.06);border:1px solid rgba(0,223,160,.15);color:#00dfa0;}
+.spinner{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,63,63,.2);border-top-color:#ff3f3f;border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:8px;}
+@keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<h1>ImportCalc V3 - Chine vers Monde</h1>
-<div id="steps" style="display:flex;align-items:center;margin-bottom:20px;">
-  <div class="dot active" id="d1">1</div><div class="line" id="l1"></div>
-  <div class="dot" id="d2">2</div><div class="line" id="l2"></div>
-  <div class="dot" id="d3">3</div><div class="line" id="l3"></div>
-  <div class="dot" id="d4">4</div>
+
+<h1>ImportCalc V3 — Chine vers Monde</h1>
+
+<div class="step-row">
+  <div class="dot on" id="s1">1</div>
+  <div class="line" id="l1"></div>
+  <div class="dot" id="s2">2</div>
+  <div class="line" id="l2"></div>
+  <div class="dot" id="s3">3</div>
+  <div class="line" id="l3"></div>
+  <div class="dot" id="s4">4</div>
 </div>
-<div id="root"></div>
+
+<!-- ETAPE 1 -->
+
+<div id="page1" class="card">
+  <h3>Etape 1 / 4 — Destination et Produit</h3>
+  <label>Pays de destination</label>
+  <select id="pays">
+    <option value="france">France</option>
+    <option value="maroc">Maroc</option>
+    <option value="congo">Congo-Brazzaville</option>
+  </select>
+  <label>Type de produit *</label>
+  <input id="type" type="text" placeholder="Ex: veste, telephone, velo electrique"/>
+  <label>Description (facultatif)</label>
+  <input id="desc" type="text" placeholder="Ex: veste homme polyester sans marque"/>
+  <label>Code HS (facultatif)</label>
+  <input id="hs" type="text" placeholder="Ex: 620140" maxlength="10"/>
+  <p id="e1" style="color:#ff7060;font-size:13px;display:none;margin-bottom:8px;">Le type de produit est obligatoire.</p>
+  <button class="btn" onclick="go2()">Suivant — Valeur</button>
+</div>
+
+<!-- ETAPE 2 -->
+
+<div id="page2" class="card hidden">
+  <h3>Etape 2 / 4 — Valeur et Quantite</h3>
+  <label>Quantite *</label>
+  <input id="qte" type="number" placeholder="Ex: 10" min="1"/>
+  <label>Valeur totale marchandise *</label>
+  <input id="total" type="number" placeholder="Ex: 1200" min="0"/>
+  <label>Devise</label>
+  <select id="devise">
+    <option value="EUR">EUR - Euro</option>
+    <option value="USD">USD - Dollar</option>
+    <option value="CNY">CNY - Yuan chinois</option>
+  </select>
+  <label>Poids total en kg (facultatif)</label>
+  <input id="poids" type="number" placeholder="Ex: 25" min="0"/>
+  <p id="e2" style="color:#ff7060;font-size:13px;display:none;margin-bottom:8px;">Quantite et valeur sont obligatoires.</p>
+  <button class="btn" onclick="go3()">Suivant — Transport</button>
+  <button class="btn btn-sec" onclick="back(1)">Retour</button>
+</div>
+
+<!-- ETAPE 3 -->
+
+<div id="page3" class="card hidden">
+  <h3>Etape 3 / 4 — Transport</h3>
+  <label>Mode de transport</label>
+  <select id="mode">
+    <option value="aerien">Aerien / Express</option>
+    <option value="maritime">Maritime</option>
+  </select>
+  <label>Cout transport en EUR *</label>
+  <input id="cout" type="number" placeholder="Ex: 280" min="0"/>
+  <label>Incoterm</label>
+  <select id="inco">
+    <option value="CIF">CIF — Cost Insurance Freight</option>
+    <option value="FOB">FOB — Free On Board</option>
+    <option value="DAP">DAP — Delivered At Place</option>
+    <option value="DDP">DDP — Delivered Duty Paid</option>
+    <option value="EXW">EXW — Ex Works</option>
+  </select>
+  <label>Transporteur</label>
+  <select id="trans">
+    <option value="Non precis">Non precis</option>
+    <option value="DHL">DHL</option>
+    <option value="UPS">UPS</option>
+    <option value="FedEx">FedEx</option>
+    <option value="Colissimo">Colissimo</option>
+    <option value="ePacket">ePacket</option>
+  </select>
+  <p id="e3" style="color:#ff7060;font-size:13px;display:none;margin-bottom:8px;">Le cout de transport est obligatoire.</p>
+  <button class="btn" onclick="go4()">Suivant — Statut</button>
+  <button class="btn btn-sec" onclick="back(2)">Retour</button>
+</div>
+
+<!-- ETAPE 4 -->
+
+<div id="page4" class="card hidden">
+  <h3>Etape 4 / 4 — Statut Import</h3>
+  <label>Mode achat</label>
+  <select id="achat">
+    <option value="Particulier">Particulier</option>
+    <option value="Professionnel">Professionnel</option>
+  </select>
+  <label>Usage prevu</label>
+  <select id="usage">
+    <option value="Usage personnel">Usage personnel</option>
+    <option value="Revente">Revente</option>
+    <option value="Equipement activite">Equipement activite pro</option>
+  </select>
+  <button class="btn" onclick="calcul()">Lancer le calcul</button>
+  <button class="btn btn-sec" onclick="back(3)">Retour</button>
+</div>
+
+<!-- RESULTAT -->
+
+<div id="page5" class="hidden"></div>
 
 <script>
-var S = {
-  step: 1,
-  pays: 'france',
-  produit: {type:'', desc:'', hs:''},
-  valeur: {qte:'', total:'', devise:'EUR', poids:'', volume:''},
-  transport: {mode:'aerien', cout:'', incoterm:'CIF', transporteur:'Non precis'},
-  statut: {achat:'Particulier', usage:'Usage personnel'}
-};
-
 var CONV = {EUR:1, USD:0.92, CNY:0.128};
-var TVA = {france:20, maroc:20, congo:18.9};
-
-var TAUX = {
-  france: {textile:12,vetement:12,veste:12,chaussure:17,electronique:0,ordinateur:0,telephone:0,smartphone:0,velo:15,trottinette:15,jouet:4.7,meuble:5.6,cosmetique:6.5,alimentaire:12,machine:2.7,sport:4.7,def:5},
-  maroc:  {textile:25,vetement:25,veste:25,chaussure:40,electronique:2.5,ordinateur:2.5,telephone:2.5,smartphone:2.5,velo:25,trottinette:25,jouet:17.5,meuble:40,cosmetique:25,alimentaire:25,machine:10,sport:17.5,def:17.5},
-  congo:  {textile:20,vetement:20,veste:20,chaussure:30,electronique:10,ordinateur:10,telephone:10,smartphone:10,velo:20,trottinette:20,jouet:20,meuble:20,cosmetique:30,alimentaire:20,machine:5,sport:20,def:20}
+var TVA_TAUX = {france:20, maroc:20, congo:18.9};
+var DROITS = {
+  france:{veste:12,textile:12,vetement:12,pantalon:12,chemise:12,robe:12,chaussure:17,sac:3.7,electronique:0,ordinateur:0,telephone:0,smartphone:0,tablette:0,casque:0,cable:0,velo:15,trottinette:15,jouet:4.7,meuble:5.6,luminaire:4.7,cosmetique:6.5,alimentaire:12,machine:2.7,outil:2.7,sport:4.7,def:5},
+  maroc:{veste:25,textile:25,vetement:25,pantalon:25,chaussure:40,sac:17.5,electronique:2.5,ordinateur:2.5,telephone:2.5,smartphone:2.5,tablette:2.5,velo:25,trottinette:25,jouet:17.5,meuble:40,luminaire:25,cosmetique:25,alimentaire:25,machine:10,outil:10,sport:17.5,def:17.5},
+  congo:{electronique:10,ordinateur:10,telephone:10,smartphone:10,tablette:10,machine:5,outil:5,textile:20,vetement:20,veste:20,chaussure:30,sac:20,luminaire:20,meuble:20,jouet:20,cosmetique:30,alimentaire:20,velo:20,trottinette:20,sport:20,def:20}
 };
 
-function getTaux(type, pays) {
-  var t = TAUX[pays] || TAUX.france;
-  var l = type.toLowerCase();
-  var keys = Object.keys(t);
-  for (var i=0; i<keys.length; i++) {
-    if (keys[i] !== 'def' && l.indexOf(keys[i]) >= 0) return t[keys[i]];
+function g(id){return document.getElementById(id);}
+function val(id){return g(id).value.trim();}
+function show(id){g(id).classList.remove('hidden');}
+function hide(id){g(id).classList.add('hidden');}
+
+function updateDots(step){
+  for(var i=1;i<=4;i++){
+    var d=g('s'+i), l=i<4?g('l'+i):null;
+    if(i<step){d.className='dot on';d.textContent='ok';if(l)l.style.background='#00dfa0';}
+    else if(i===step){d.className='dot on';d.textContent=String(i);if(l)l.style.background='#223350';}
+    else{d.className='dot';d.textContent=String(i);if(l)l.style.background='#223350';}
+  }
+}
+
+function go2(){
+  if(!val('type')){g('e1').style.display='block';return;}
+  g('e1').style.display='none';
+  hide('page1');show('page2');updateDots(2);window.scrollTo(0,0);
+}
+
+function go3(){
+  if(!val('qte')||!val('total')){g('e2').style.display='block';return;}
+  g('e2').style.display='none';
+  hide('page2');show('page3');updateDots(3);window.scrollTo(0,0);
+}
+
+function go4(){
+  if(!val('cout')){g('e3').style.display='block';return;}
+  g('e3').style.display='none';
+  hide('page3');show('page4');updateDots(4);window.scrollTo(0,0);
+}
+
+function back(n){
+  hide('page'+(n+1));show('page'+n);updateDots(n);window.scrollTo(0,0);
+}
+
+function getTaux(type,pays){
+  var t=DROITS[pays]||DROITS.france;
+  var l=type.toLowerCase();
+  var keys=Object.keys(t);
+  for(var i=0;i<keys.length;i++){
+    if(keys[i]!=='def'&&l.indexOf(keys[i])>=0) return t[keys[i]];
   }
   return t.def;
 }
 
-function fmt(n) {
-  return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' EUR';
+function fmt(n){
+  return parseFloat(n).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' EUR';
 }
 
-function v(id) {
-  var el = document.getElementById(id);
-  return el ? el.value.trim() : '';
-}
+function calcul(){
+  var pays=val('pays');
+  var type=val('type');
+  var conv=CONV[val('devise')]||1;
+  var valEUR=parseFloat(val('total'))*conv;
+  var cout=parseFloat(val('cout'))||0;
+  var base=valEUR+cout;
+  var taux=getTaux(type,pays);
+  var tvaPct=TVA_TAUX[pays]||20;
+  var dd=base*taux/100;
+  var tva=(base+dd)*tvaPct/100;
+  var divers=Math.round(valEUR*0.01);
+  var dossier=val('trans')==='DHL'||val('trans')==='UPS'?27:val('trans')==='FedEx'?22:18;
+  var total=valEUR+cout+dd+tva+divers+dossier;
 
-function updateSteps() {
-  for (var i=1; i<=4; i++) {
-    var d = document.getElementById('d'+i);
-    var l = i<4 ? document.getElementById('l'+i) : null;
-    if (i < S.step) { d.className='dot done'; d.textContent='ok'; if(l) l.className='line done'; }
-    else if (i === S.step) { d.className='dot active'; d.textContent=String(i); if(l) l.className='line'; }
-    else { d.className='dot'; d.textContent=String(i); if(l) l.className='line'; }
+  var paysLabel=pays==='france'?'France':pays==='maroc'?'Maroc':'Congo-Brazzaville';
+  var isRevente=val('usage')==='Revente';
+  var isParticulier=val('achat')==='Particulier';
+
+  var html='<div class="card" style="text-align:center;">'
+    +'<div style="font-size:11px;color:#8fa5c0;letter-spacing:.08em;margin-bottom:4px;">TOTAL ESTIME - '+paysLabel.toUpperCase()+'</div>'
+    +'<div class="result-big">'+fmt(total)+'</div>'
+    +'<div style="font-size:12px;color:#6e849e;">'+fmt(valEUR)+' marchandise + '+fmt(total-valEUR)+' taxes et frais</div>'
+    +'</div>'
+    +'<div class="card">'
+    +'<h3 style="margin-bottom:12px;">Detail des couts</h3>'
+    +'<div class="row"><span>Valeur marchandise</span><b>'+fmt(valEUR)+'</b></div>'
+    +'<div class="row"><span>Frais transport</span><b>'+fmt(cout)+'</b></div>'
+    +'<div class="row"><span>Droits douane ('+taux+'%)</span><b>'+fmt(dd)+'</b></div>'
+    +'<div class="row"><span>TVA ('+tvaPct+'%)</span><b>'+fmt(tva)+'</b></div>'
+    +'<div class="row"><span>Frais dossier et divers</span><b>'+fmt(dossier+divers)+'</b></div>'
+    +'<div class="row total"><span>TOTAL RENDU '+paysLabel.toUpperCase()+'</span><b>'+fmt(total)+'</b></div>'
+    +'</div>';
+
+  if(isRevente&&isParticulier){
+    html+='<div class="alert danger">ATTENTION : Revente declaree en mode Particulier = activite commerciale non declaree. Risque saisie et redressement douanier. Creez une micro-entreprise avant de commander.</div>';
   }
-}
 
-function render() {
-  updateSteps();
-  var root = document.getElementById('root');
-  if (S.step === 1) root.innerHTML = step1();
-  else if (S.step === 2) root.innerHTML = step2();
-  else if (S.step === 3) root.innerHTML = step3();
-  else if (S.step === 4) root.innerHTML = step4();
-  else if (S.step === 5) { root.innerHTML = calcResult(); }
+  if(pays==='france'){
+    html+='<div class="alert ai">France : taux douanier '+taux+'% estime par categorie produit. Pour le taux exact, consultez taric.europa.eu avec votre code HS.</div>';
+  } else if(pays==='maroc'){
+    html+='<div class="alert ai">Maroc : taux '+taux+'% estime. Pour confirmation, consultez le portail ADIL sur douane.gov.ma.</div>';
+  } else {
+    html+='<div class="alert ai">Congo : taux CEMAC '+taux+'%. TCI 1% + TIPAC 0,4% + TVA 18,9% inclus dans le calcul.</div>';
+  }
+
+  html+='<div class="card">'
+    +'<h3 style="margin-bottom:8px;">Analyse Claude AI</h3>'
+    +'<div id="ai-zone"><span class="spinner"></span> Analyse en cours...</div>'
+    +'</div>';
+
+  html+='<button class="btn btn-sec" style="margin-top:8px;" onclick="reset()">Nouvelle simulation</button>';
+
+  hide('page4');
+  g('page5').innerHTML=html;
+  show('page5');
+  updateDots(5);
   window.scrollTo(0,0);
+
+  setTimeout(function(){
+    callClaude(valEUR,cout,dd,tva,total,taux,tvaPct,paysLabel);
+  },600);
 }
 
-function step1() {
-  var pays = ['france','maroc','congo'];
-  var labels = ['France','Maroc','Congo-Brazzaville'];
-  var pills = '';
-  for (var i=0; i<pays.length; i++) {
-    var active = S.pays === pays[i] ? ' active' : '';
-    pills += '<button type="button" class="pill-btn' + active + '" onclick="S.pays=\'' + pays[i] + '\';render()">' + labels[i] + '</button>';
-  }
-  return '<div class="card">'
-    + '<h3 style="margin-bottom:16px;">Etape 1 / 4 - Destination et Produit</h3>'
-    + '<label>Pays de destination</label>'
-    + '<div style="margin-bottom:12px;">' + pills + '</div>'
-    + '<label>Type de produit *</label>'
-    + '<input id="f-type" placeholder="Ex: veste, telephone, velo..." value="'+S.produit.type+'"/>'
-    + '<label>Description (facultatif)</label>'
-    + '<input id="f-desc" placeholder="Ex: veste homme polyester" value="'+S.produit.desc+'"/>'
-    + '<label>Code HS (facultatif)</label>'
-    + '<input id="f-hs" placeholder="Ex: 620140" value="'+S.produit.hs+'"/>'
-    + '<div class="err" id="e1">Le type de produit est obligatoire.</div>'
-    + '<button onclick="goStep2()">Suivant - Valeur</button>'
-    + '</div>';
-}
-
-function goStep2() {
-  var t = v('f-type');
-  if (!t) { document.getElementById('e1').style.display='block'; return; }
-  S.produit.type = t;
-  S.produit.desc = v('f-desc');
-  S.produit.hs = v('f-hs');
-  S.step = 2; render();
-}
-
-function step2() {
-  return '<div class="card">'
-    + '<h3 style="margin-bottom:16px;">Etape 2 / 4 - Valeur et Quantite</h3>'
-    + '<label>Quantite *</label>'
-    + '<input id="f-qte" type="number" placeholder="Ex: 10" value="'+S.valeur.qte+'"/>'
-    + '<label>Valeur totale marchandise *</label>'
-    + '<input id="f-total" type="number" placeholder="Ex: 1200" value="'+S.valeur.total+'"/>'
-    + '<label>Devise</label>'
-    + '<select id="f-devise"><option value="EUR"'+(S.valeur.devise==='EUR'?' selected':'')+'>EUR</option><option value="USD"'+(S.valeur.devise==='USD'?' selected':'')+'>USD</option><option value="CNY"'+(S.valeur.devise==='CNY'?' selected':'')+'>CNY (Yuan)</option></select>'
-    + '<label>Poids total kg (facultatif)</label>'
-    + '<input id="f-poids" type="number" placeholder="Ex: 25" value="'+S.valeur.poids+'"/>'
-    + '<div class="err" id="e2">Quantite et valeur sont obligatoires.</div>'
-    + '<button onclick="goStep3()">Suivant - Transport</button>'
-    + '<button class="btn-sec" onclick="S.step=1;render()">Retour</button>'
-    + '</div>';
-}
-
-function goStep3() {
-  var q = v('f-qte'), t = v('f-total');
-  if (!q || !t) { document.getElementById('e2').style.display='block'; return; }
-  S.valeur.qte = q; S.valeur.total = t;
-  S.valeur.devise = v('f-devise');
-  S.valeur.poids = v('f-poids');
-  S.step = 3; render();
-}
-
-function step3() {
-  var aerienActive = S.transport.mode === 'aerien' ? ' active' : '';
-  var maritimeActive = S.transport.mode === 'maritime' ? ' active' : '';
-  return '<div class="card">'
-    + '<h3 style="margin-bottom:16px;">Etape 3 / 4 - Transport</h3>'
-    + '<label>Mode de transport</label>'
-    + '<div style="margin-bottom:12px;">'
-    + '<button type="button" class="pill-btn-sm' + aerienActive + '" onclick="S.transport.mode='aerien';render()">Aerien / Express</button>'
-    + '<button type="button" class="pill-btn-sm' + maritimeActive + '" onclick="S.transport.mode='maritime';render()">Maritime</button>
-    + '</div>'
-    + '<label>Cout transport EUR *</label>'
-    + '<input id="f-cout" type="number" placeholder="Ex: 280" value="'+S.transport.cout+'"/>'
-    + '<label>Incoterm</label>'
-    + '<select id="f-inco"><option value="CIF"'+(S.transport.incoterm==='CIF'?' selected':'')+'>CIF</option><option value="FOB"'+(S.transport.incoterm==='FOB'?' selected':'')+'>FOB</option><option value="DAP"'+(S.transport.incoterm==='DAP'?' selected':'')+'>DAP</option><option value="DDP"'+(S.transport.incoterm==='DDP'?' selected':'')+'>DDP</option><option value="EXW"'+(S.transport.incoterm==='EXW'?' selected':'')+'>EXW</option></select>'
-    + '<div class="err" id="e3">Le cout de transport est obligatoire.</div>'
-    + '<button onclick="goStep4()">Suivant - Statut</button>'
-    + '<button class="btn-sec" onclick="S.step=2;render()">Retour</button>'
-    + '</div>';
-}
-
-function goStep4() {
-  var c = v('f-cout');
-  if (!c) { document.getElementById('e3').style.display='block'; return; }
-  S.transport.cout = c;
-  S.transport.incoterm = v('f-inco');
-  S.step = 4; render();
-}
-
-function step4() {
-  var partActive = S.statut.achat === 'Particulier' ? ' active' : '';
-  var proActive = S.statut.achat === 'Professionnel' ? ' active' : '';
-  var persoActive = S.statut.usage === 'Usage personnel' ? ' active' : '';
-  var reventeActive = S.statut.usage === 'Revente' ? ' active' : '';
-  return '<div class="card">'
-    + '<h3 style="margin-bottom:16px;">Etape 4 / 4 - Statut</h3>'
-    + '<label>Mode achat</label>'
-    + '<div style="margin-bottom:12px;">'
-    + '<button type="button" class="pill-btn-sm' + partActive + '" onclick="S.statut.achat='Particulier';render()">Particulier</button>'
-    + '<button type="button" class="pill-btn-sm' + proActive + '" onclick="S.statut.achat='Professionnel';render()">Professionnel</button>
-    + '</div>'
-    + '<label>Usage prevu</label>'
-    + '<div style="margin-bottom:16px;">'
-    + '<button type="button" class="pill-btn-sm' + persoActive + '" onclick="S.statut.usage='Usage personnel';render()">Usage perso</button>'
-    + '<button type="button" class="pill-btn-sm' + reventeActive + '" onclick="S.statut.usage='Revente';render()">Revente</button>
-    + '</div>'
-    + '<button onclick="S.step=5;render()">Lancer le calcul</button>'
-    + '<button class="btn-sec" onclick="S.step=3;render()">Retour</button>'
-    + '</div>';
-}
-
-function calcResult() {
-  var pays = S.pays;
-  var conv = CONV[S.valeur.devise] || 1;
-  var valEUR = parseFloat(S.valeur.total) * conv;
-  var cout = parseFloat(S.transport.cout) || 0;
-  var base = valEUR + cout;
-  var taux = getTaux(S.produit.type, pays);
-  var tvaPct = TVA[pays] || 20;
-  var dd = base * taux / 100;
-  var tva = (base + dd) * tvaPct / 100;
-  var divers = Math.round(valEUR * 0.01);
-  var total = valEUR + cout + dd + tva + divers;
-
-  var paysLabel = pays === 'france' ? 'France' : pays === 'maroc' ? 'Maroc' : 'Congo-Brazzaville';
-  var isRevente = S.statut.usage === 'Revente';
-  var isParticulier = S.statut.achat === 'Particulier';
-  var risque = (isRevente && isParticulier) ? 'danger' : 'ok';
-
-  var html = '<div class="card" style="text-align:center;">'
-    + '<div style="font-size:11px;color:#8fa5c0;margin-bottom:4px;">TOTAL ESTIME A L\'ARRIVEE - ' + paysLabel.toUpperCase() + '</div>'
-    + '<div class="result-total">' + fmt(total) + '</div>'
-    + '<div style="font-size:12px;color:#6e849e;">' + fmt(valEUR) + ' marchandise + ' + fmt(cout) + ' transport + ' + fmt(dd+tva+divers) + ' taxes</div>'
-    + '</div>'
-    + '<div class="card">'
-    + '<h3 style="margin-bottom:12px;">Detail des couts</h3>'
-    + '<div class="row"><span>Valeur marchandise</span><span class="val">' + fmt(valEUR) + '</span></div>'
-    + '<div class="row"><span>Transport</span><span class="val">' + fmt(cout) + '</span></div>'
-    + '<div class="row"><span>Droits douane (' + taux + '%)</span><span class="val">' + fmt(dd) + '</span></div>'
-    + '<div class="row"><span>TVA (' + tvaPct + '%)</span><span class="val">' + fmt(tva) + '</span></div>'
-    + '<div class="row"><span>Divers (1%)</span><span class="val">' + fmt(divers) + '</span></div>'
-    + '<div class="row" style="font-weight:800;font-size:15px;"><span>TOTAL</span><span style="color:#ff3f3f;">' + fmt(total) + '</span></div>'
-    + '</div>';
-
-  if (isRevente && isParticulier) {
-    html += '<div class="alert alert-danger">ATTENTION : Revente en mode Particulier = activite commerciale non declaree. Risque de saisie douaniere. Creez une micro-entreprise avant de commander.</div>';
-  }
-
-  html += '<div class="card">'
-    + '<h3 style="margin-bottom:12px;">Analyse Claude AI</h3>'
-    + '<div id="ai-block"><div class="ai-loading"><div class="spinner"></div><br/>Analyse en cours...</div></div>'
-    + '</div>';
-
-  html += '<button onclick="S.step=1;S.produit={type:\'\',desc:\'\',hs:\'\'};S.valeur={qte:\'\',total:\'\',devise:\'EUR\',poids:\'\',volume:\'\'};S.transport={mode:\'aerien\',cout:\'\',incoterm:\'CIF\',transporteur:\'Non precis\'};S.statut={achat:\'Particulier\',usage:\'Usage personnel\'};render()">Nouvelle simulation</button>';
-
-  setTimeout(function() { callClaude(valEUR, cout, dd, tva, total, taux, tvaPct, pays, paysLabel); }, 500);
-
-  return html;
-}
-
-function callClaude(valEUR, cout, dd, tva, total, taux, tvaPct, pays, paysLabel) {
-  var block = document.getElementById('ai-block');
-  if (!block) return;
-
-  var prompt = 'Analyse import: Produit=' + S.produit.type + ' Destination=' + paysLabel + ' Valeur=' + Math.round(valEUR) + 'EUR Transport=' + S.transport.mode + ' Incoterm=' + S.transport.incoterm + ' Droits=' + Math.round(dd) + 'EUR TVA=' + Math.round(tva) + 'EUR Total=' + Math.round(total) + 'EUR Statut=' + S.statut.achat + '-' + S.statut.usage;
-
-  fetch('/.netlify/functions/claude', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({importData: {
-      type: S.produit.type, pays: paysLabel,
-      qte: S.valeur.qte, total: S.valeur.total, devise: S.valeur.devise,
-      valEUR: Math.round(valEUR), cout: Math.round(cout),
-      mode: S.transport.mode, incoterm: S.transport.incoterm,
-      baseTaxable: Math.round(valEUR+cout), taux: taux,
-      dd: Math.round(dd), tva: Math.round(tva), tvaPct: tvaPct,
-      total_final: Math.round(total),
-      achat: S.statut.achat, usage: S.statut.usage,
-      sensibles: [], remarques: ''
+function callClaude(valEUR,cout,dd,tva,total,taux,tvaPct,paysLabel){
+  var zone=g('ai-zone');
+  if(!zone) return;
+  fetch('/.netlify/functions/claude',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({importData:{
+      type:val('type'),pays:paysLabel,
+      qte:val('qte'),total:val('total'),devise:val('devise'),
+      valEUR:Math.round(valEUR),cout:Math.round(cout),
+      mode:val('mode'),incoterm:val('inco'),
+      baseTaxable:Math.round(valEUR+cout),taux:taux,
+      dd:Math.round(dd),tva:Math.round(tva),tvaPct:tvaPct,
+      total_final:Math.round(total),
+      achat:val('achat'),usage:val('usage'),
+      sensibles:[],remarques:''
     }})
   })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (!data.success || !data.analysis) throw new Error('Reponse invalide');
-    var a = data.analysis;
-    var risqueClass = a.risque === 'faible' ? 'badge-ok' : a.risque === 'eleve' ? 'badge-danger' : 'badge-warn';
-    var html = '<span class="badge ' + risqueClass + '">Risque ' + (a.risque || 'moyen') + '</span>'
-      + '<p style="font-size:14px;font-weight:600;margin-bottom:12px;">' + (a.resume || '') + '</p>';
-    if (a.points_cles && a.points_cles.length) {
-      for (var i=0; i<a.points_cles.length; i++) {
-        html += '<div class="alert alert-info">' + a.points_cles[i] + '</div>';
-      }
-    }
-    if (a.conseil_principal) {
-      html += '<div class="alert alert-warn">Conseil : ' + a.conseil_principal + '</div>';
-    }
-    block.innerHTML = html;
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if(!data.success||!data.analysis) throw new Error('Reponse invalide');
+    var a=data.analysis;
+    var rc=a.risque==='faible'?'ok':a.risque==='eleve'?'danger':'warn';
+    var html='<div class="alert '+rc+'" style="font-weight:700;margin-bottom:8px;">Risque : '+(a.risque||'moyen')+'</div>';
+    if(a.resume) html+='<p style="font-size:14px;margin-bottom:10px;">'+a.resume+'</p>';
+    if(a.points_cles){for(var i=0;i<a.points_cles.length;i++){html+='<div class="alert ai" style="margin-bottom:6px;">'+a.points_cles[i]+'</div>';}}
+    if(a.conseil_principal) html+='<div class="alert warn">Conseil : '+a.conseil_principal+'</div>';
+    if(a.optimisation) html+='<div class="alert ok">Optimisation : '+a.optimisation+'</div>';
+    zone.innerHTML=html;
   })
-  .catch(function(err) {
-    block.innerHTML = '<div class="alert alert-danger">Erreur Claude : ' + err.message + '</div>';
+  .catch(function(err){
+    zone.innerHTML='<div class="alert danger">Erreur Claude : '+err.message+'</div>';
   });
 }
 
-render();
+function reset(){
+  g('page5').innerHTML='';
+  hide('page5');
+  g('type').value='';g('desc').value='';g('hs').value='';
+  g('qte').value='';g('total').value='';g('poids').value='';
+  g('cout').value='';
+  show('page1');updateDots(1);window.scrollTo(0,0);
+}
 </script>
 
 </body>
